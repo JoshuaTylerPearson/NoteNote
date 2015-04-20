@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/C:/Users/John/Documents/GitHub/NoteNote/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string-array name="notes_array">
+    </string-array>
+    <string-array name="prompt_array">
+        <item>New Note</item>
+        <item>New Divider</item>
+        <item>New Subject</item>
+    </string-array>
+    <string name="action_add">Add New Note</string>
+    <string name="action_websearch">Web search</string>
+    <string name="app_name">NoteNote</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="directory">Under:</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="title">Title:</string>
+</resources>
