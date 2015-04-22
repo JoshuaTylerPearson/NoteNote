@@ -69,7 +69,7 @@ public class DataBase extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public ArrayList<String> getAllSbjs() { //gets all the subjects in database
+    public ArrayList<String> getSbjs() { //gets all the subjects in database
         ArrayList<String> sbjs = new ArrayList<String>();
 
         SQLiteDatabase db = this.getWritableDatabase();
