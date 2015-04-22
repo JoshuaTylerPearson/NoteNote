@@ -145,6 +145,7 @@ public class MainActivity extends Activity {
         }
         // Handle action buttons
         switch(item.getItemId()) {
+        /*
         case R.id.action_websearch:
             // create intent to perform web search for this planet
             Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
@@ -156,7 +157,7 @@ public class MainActivity extends Activity {
                 Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
             }
             return true;
-            
+        */
         /*
          * 
          *   
@@ -327,6 +328,7 @@ public class MainActivity extends Activity {
 
     
     //    EDIT FOLLOWING CODE TO MAKE LIST ITEMS
+    /*
     public class NoteFragment extends Fragment {
         //public static final String ARG_PLANET_NUMBER = "planet_number";
 
@@ -336,4 +338,5 @@ public class MainActivity extends Activity {
 
        
     }
+    */
 }
