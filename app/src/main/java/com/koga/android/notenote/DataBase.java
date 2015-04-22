@@ -76,10 +76,13 @@ public class DataBase extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SUBJECT, null);
 
         if(cursor.moveToFirst()) {
+
             do {
                 sbjs.add(cursor.getString(0));
             } while(cursor.moveToNext());
         }
+        cursor.close();
+        db.close();
         return sbjs;
     }
 
@@ -94,6 +97,8 @@ public class DataBase extends SQLiteOpenHelper {
                 divid.add(cursor.getString(2));
             } while(cursor.moveToNext());
         }
+        cursor.close();
+        db.close();
         return divid;
     }
 
@@ -108,6 +113,8 @@ public class DataBase extends SQLiteOpenHelper {
                 notes.add(cursor.getString(2));
             } while(cursor.moveToNext());
         }
+        cursor.close();
+        db.close();
         return notes;
     }
 
@@ -122,6 +129,8 @@ public class DataBase extends SQLiteOpenHelper {
                 notes = (DbBitmapUtility.getImage(cursor.getBlob(3)));
             } while(cursor.moveToNext());
         }
+        cursor.close();
+        db.close();
         return notes;
     }
 
@@ -166,34 +175,27 @@ public class DataBase extends SQLiteOpenHelper {
 
     }
 
-
-
-    /*
-    public void deleteSbj(Sbj m) {
+    public void deleteSbj(String sbj) { //del subject and all sub bits
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_SUBJECT, (SUBJECT_PRIMARY_KEY + " = '" + m.getName() + "'"), null);
+        db.delete(TABLE_SUBJECT, (SUBJECT_PRIMARY_KEY + " = '" +  sbj + "'"), null);
+        db.delete(TABLE_DIV, (SUBJECT_FOREIGN_KEY + " = '" +  sbj + "'"), null);
+        db.delete(TABLE_NOTES, (SBJ_FOREIGN_KEY + " = '" +  sbj + "'"), null);
 
         db.close();
     }
 
-    public void addSbj(Sbj m) {
-
+    public void deleteDiv(String div) { //del div and all sub notes
         SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_DIV, (DIVI_KEY + " = '" +  div + "'"), null);
+        db.delete(TABLE_NOTES, (DIV_FOREIGN_KEY + " = '" +  div + "'"), null);
 
-        ContentValues values = new ContentValues();
-        values.put(SUBJECT_PRIMARY_KEY, m.getName());
-        values.put(DIVI_KEY, m.getDividers());
-
-        db.insert(TABLE_SUBJECT, null, values);
-        db.close();
-
-    }
-
-    public void removeSbj(Sbj m) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_SUBJECT, (SUBJECT_PRIMARY_KEY + " = '" + m.getName() + "'"), null);
         db.close();
     }
-    */
 
+    public void deleteNote(String note) { //del note
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NOTES, (NOTE_PRIMARY_KEY + " = '" +  note + "'"), null);
+
+        db.close();
+    }
 }
