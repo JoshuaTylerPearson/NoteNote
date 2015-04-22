@@ -25,7 +25,7 @@ public class DataBase extends SQLiteOpenHelper {
     private static final String TABLE_DIV = "div";
     private static final String DIV_PRIMARY_KEY = "pk";
     private static final String SUBJECT_FOREIGN_KEY = "subject";
-    private static final String DIVI_KEY = "divider";
+    private static final String DIVIDER_KEY = "divider";
 
     private static final String TABLE_NOTES = "nts";
     private static final String DIV_FOREIGN_KEY = "divider";
@@ -47,7 +47,7 @@ public class DataBase extends SQLiteOpenHelper {
                 + TABLE_DIV + "("
                 + DIV_PRIMARY_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + SUBJECT_FOREIGN_KEY + " TEXT FOREIGN KEY,"
-                + DIVI_KEY + " TEXT," + ")";
+                + DIVIDER_KEY + " TEXT," + ")";
         db.execSQL(CREATE_DIV_TABLE);
 
         String CREATE_NOTES_TABLE = "CREATE TABLE IF NOT EXISTS "
@@ -69,8 +69,8 @@ public class DataBase extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public ArrayList<String> getSbjs() { //gets all the subjects in database
-        ArrayList<String> sbjs = new ArrayList<String>();
+    public ArrayList<String> getSubjects() { //gets all the subjects in database
+        ArrayList<String> subjects = new ArrayList<String>();
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SUBJECT, null);
@@ -78,28 +78,28 @@ public class DataBase extends SQLiteOpenHelper {
         if(cursor.moveToFirst()) {
 
             do {
-                sbjs.add(cursor.getString(0));
+                subjects.add(cursor.getString(0));
             } while(cursor.moveToNext());
         }
         cursor.close();
         db.close();
-        return sbjs;
+        return subjects;
     }
 
     public ArrayList<String> getDividers(String sbj) { //gets all the dividers for subject
-        ArrayList<String> divid = new ArrayList<String>();
+        ArrayList<String> dividers = new ArrayList<String>();
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DIV + " WHERE " + SUBJECT_FOREIGN_KEY + "='" + sbj + "';", null);
 
         if(cursor.moveToFirst()) {
             do {
-                divid.add(cursor.getString(2));
+                dividers.add(cursor.getString(2));
             } while(cursor.moveToNext());
         }
         cursor.close();
         db.close();
-        return divid;
+        return dividers;
     }
 
     public ArrayList<String> getNotes(String sbj, String div) { //gets all the notes for div
@@ -119,75 +119,75 @@ public class DataBase extends SQLiteOpenHelper {
     }
 
     public Bitmap getBitmaps(String note, String sbj, String div) { //gets the bitmap for note
-        Bitmap notes = null;
+        Bitmap image = null;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES + " WHERE " + DIV_FOREIGN_KEY + "='" + div + "' AND " + SBJ_FOREIGN_KEY + "='" + sbj + "' AND " + NOTE_PRIMARY_KEY + "='" + note + "';", null);
 
         if(cursor.moveToFirst()) {
             do {
-                notes = (DbBitmapUtility.getImage(cursor.getBlob(3)));
+                image = (DbBitmapUtility.getImage(cursor.getBlob(3)));
             } while(cursor.moveToNext());
         }
         cursor.close();
         db.close();
-        return notes;
+        return image;
     }
 
 
-    public void addDiv(String sbj, String div) { //adds div to subject
+    public void addDivider(String subject, String divider) { //adds div to subject
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(SUBJECT_FOREIGN_KEY, sbj);
-        values.put(DIVI_KEY, div);
+        values.put(SUBJECT_FOREIGN_KEY, subject);
+        values.put(DIVIDER_KEY, divider);
 
         db.insert(TABLE_DIV, null, values);
         db.close();
 
     }
 
-    public void addSbj(String sbj) { //adds subject
+    public void addSubject(String subject) { //adds subject
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(SUBJECT_PRIMARY_KEY, sbj);
+        values.put(SUBJECT_PRIMARY_KEY, subject);
 
         db.insert(TABLE_SUBJECT, null, values);
         db.close();
 
     }
 
-    public void addNote(String note, String sbj, String div, Bitmap bm) { //adds note to divider in subject
+    public void addNote(String note, String subject, String divider, Bitmap image) { //adds note to divider in subject
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(SBJ_FOREIGN_KEY, sbj);
-        values.put(DIV_FOREIGN_KEY, div);
+        values.put(SBJ_FOREIGN_KEY, subject);
+        values.put(DIV_FOREIGN_KEY, divider);
         values.put(NOTE_PRIMARY_KEY, note);
-        values.put(BITMAP_KEY, DbBitmapUtility.getBytes(bm));
+        values.put(BITMAP_KEY, DbBitmapUtility.getBytes(image));
 
         db.insert(TABLE_SUBJECT, null, values);
         db.close();
 
     }
 
-    public void deleteSbj(String sbj) { //del subject and all sub bits
+    public void deleteSbj(String subject) { //del subject and all sub bits
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_SUBJECT, (SUBJECT_PRIMARY_KEY + " = '" +  sbj + "'"), null);
-        db.delete(TABLE_DIV, (SUBJECT_FOREIGN_KEY + " = '" +  sbj + "'"), null);
-        db.delete(TABLE_NOTES, (SBJ_FOREIGN_KEY + " = '" +  sbj + "'"), null);
+        db.delete(TABLE_SUBJECT, (SUBJECT_PRIMARY_KEY + " = '" +  subject + "'"), null);
+        db.delete(TABLE_DIV, (SUBJECT_FOREIGN_KEY + " = '" +  subject + "'"), null);
+        db.delete(TABLE_NOTES, (SBJ_FOREIGN_KEY + " = '" +  subject + "'"), null);
 
         db.close();
     }
 
-    public void deleteDiv(String div) { //del div and all sub notes
+    public void deleteDiv(String divider) { //del div and all sub notes
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_DIV, (DIVI_KEY + " = '" +  div + "'"), null);
-        db.delete(TABLE_NOTES, (DIV_FOREIGN_KEY + " = '" +  div + "'"), null);
+        db.delete(TABLE_DIV, (DIVIDER_KEY + " = '" +  divider + "'"), null);
+        db.delete(TABLE_NOTES, (DIV_FOREIGN_KEY + " = '" +  divider + "'"), null);
 
         db.close();
     }

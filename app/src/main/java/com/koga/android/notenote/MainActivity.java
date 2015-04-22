@@ -108,10 +108,10 @@ public class MainActivity extends Activity {
     }
 
     public void initializeElements() {
-        
+
         db = new DataBase(getBaseContext());
 
-        notesDividersSubjects = db.getSbjs();
+        notesDividersSubjects = db.getSubjects();
 
     }
 
