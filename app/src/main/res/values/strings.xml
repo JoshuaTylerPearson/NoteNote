@@ -30,4 +30,6 @@
     </string-array>
     <string name="title">Title:</string>
     <string name="directory">Under:</string>
+    <string name="can">Cancel</string>
+    <string name="new_note">New Note</string>
 </resources>

@@ -7,6 +7,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -145,6 +147,16 @@ public class MainActivity extends Activity {
         }
         // Handle action buttons
         switch(item.getItemId()) {
+        case R.id.action_add:
+            //this needs to be called when the subject it clicked and display a selection fragment not be in the + button thing
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            slct_fgmt fragment = new slct_fgmt();
+            fragmentTransaction.add(R.id.layout_root, fragment);
+            fragmentTransaction.commit();
+
+
         /*
         case R.id.action_websearch:
             // create intent to perform web search for this planet
@@ -171,6 +183,7 @@ public class MainActivity extends Activity {
          *   
          *   
          */
+        /*
         case R.id.action_add:
         	
         	LayoutInflater li = LayoutInflater.from(MainActivity.this);
@@ -245,6 +258,7 @@ public class MainActivity extends Activity {
 			alertDialog.show();
 		
         	return true;
+        */
         default:
             return super.onOptionsItemSelected(item);
         }
