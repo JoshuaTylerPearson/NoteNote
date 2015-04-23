@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ public class MainActivity extends Activity {
     private ArrayList<String> notesDividersSubjects;
     private ArrayAdapter<String> notesAdapter;
     //private ArrayAdapter<String> spinnerAdapter;
+    private boolean drawerOpen;
 
     private String result;
     private int promptIndex;
@@ -66,11 +68,7 @@ public class MainActivity extends Activity {
        
         notesAdapter = new ArrayAdapter<String>(this,
                R.layout.drawer_list_item, notesDividersSubjects);
-        
-        
-        //mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                //R.layout.drawer_list_item, notesDividersSubjects)); 
-        /////////unable to use adapter name this way /////////
+
         
         
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -91,11 +89,13 @@ public class MainActivity extends Activity {
                 ) {
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(mTitle);
+                drawerOpen = false;
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
                 getActionBar().setTitle(mDrawerTitle);
+                drawerOpen = true;
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
             
@@ -117,26 +117,30 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        /*
     	boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
     	if(!drawerOpen){
     	MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
     	}
-    	else{
-    		MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.slide_menu_actions, menu);
-            return super.onCreateOptionsMenu(menu);
-    	}
+    	else{}
+    	*/ ///useless atm
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.slide_menu_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+
     }
 
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
+        /*
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         if(drawerOpen)
         menu.findItem(R.id.action_add).setVisible(drawerOpen);
+        */
         
         return super.onPrepareOptionsMenu(menu);
     }
@@ -151,12 +155,15 @@ public class MainActivity extends Activity {
         // Handle action buttons
         switch(item.getItemId()) {
         case R.id.action_add:
+            if(!drawerOpen)
+                mDrawerLayout.openDrawer(Gravity.START);
             //this needs to be called when the subject it clicked and display a selection fragment not be in the + button thing
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
             slct_fgmt fragment = new slct_fgmt();
-            fragmentTransaction.add(R.id.layout_root, fragment);
+            //fragmentTransaction.add(R.id.layout_slct, fragment);
+            fragmentTransaction.add(R.id.layout_slct, fragment);
             fragmentTransaction.commit();
 
 

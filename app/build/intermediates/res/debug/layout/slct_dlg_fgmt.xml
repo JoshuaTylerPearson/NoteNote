@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_slct"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1">
+
 
     <Button
         android:layout_width="wrap_content"
@@ -41,4 +43,4 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/space" />
 
-</RelativeLayout><!-- From: file:/C:/Users/John/Documents/GitHub/NoteNote/app/src/main/res/layout/slct_dlg_fgmt.xml -->
+</RelativeLayout><!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/layout/slct_dlg_fgmt.xml -->

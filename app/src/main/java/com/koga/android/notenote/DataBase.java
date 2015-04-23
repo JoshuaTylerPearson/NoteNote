@@ -40,22 +40,31 @@ public class DataBase extends SQLiteOpenHelper {
 
         String CREATE_SUBJECT_TABLE = "CREATE TABLE IF NOT EXISTS "
                 + TABLE_SUBJECT + "("
-                + SUBJECT_PRIMARY_KEY + " TEXT PRIMARY KEY," + ")";
+                + SUBJECT_PRIMARY_KEY + " TEXT PRIMARY KEY" + ")";
         db.execSQL(CREATE_SUBJECT_TABLE);
 
         String CREATE_DIV_TABLE = "CREATE TABLE IF NOT EXISTS "
                 + TABLE_DIV + "("
                 + DIV_PRIMARY_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + SUBJECT_FOREIGN_KEY + " TEXT FOREIGN KEY,"
-                + DIVIDER_KEY + " TEXT," + ")";
+                + SUBJECT_FOREIGN_KEY + " TEXT,"
+                + DIVIDER_KEY + " TEXT" + ", "
+                + "FOREIGN KEY(" + SUBJECT_FOREIGN_KEY + ")"
+                + "REFERENCES " + TABLE_SUBJECT + "("
+                + SUBJECT_PRIMARY_KEY + "))";
         db.execSQL(CREATE_DIV_TABLE);
 
         String CREATE_NOTES_TABLE = "CREATE TABLE IF NOT EXISTS "
                 + TABLE_NOTES + "( "
-                + DIV_FOREIGN_KEY + " TEXT FOREIGN KEY,"
-                + SBJ_FOREIGN_KEY + " TEXT FOREIGN KEY,"
+                + DIV_FOREIGN_KEY + " TEXT,"
+                + SBJ_FOREIGN_KEY + " TEXT,"
                 + NOTE_PRIMARY_KEY + " TEXT PRIMARY KEY,"
-                + BITMAP_KEY + "BLOB," + ")";
+                + BITMAP_KEY + "BLOB, "
+                + "FOREIGN KEY(" + SBJ_FOREIGN_KEY + ")"
+                + "REFERENCES " + TABLE_SUBJECT + "("
+                + SUBJECT_PRIMARY_KEY + "),"
+                + "FOREIGN KEY(" + DIV_FOREIGN_KEY + ")"
+                + "REFERENCES " + TABLE_DIV + "("
+                + DIV_PRIMARY_KEY + "))";
         db.execSQL(CREATE_NOTES_TABLE);
 
     }
