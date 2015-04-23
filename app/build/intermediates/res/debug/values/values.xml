@@ -7,7 +7,6 @@
     <string-array name="prompt_array">
         <item>New Note</item>
         <item>New Divider</item>
-        <item>New Subject</item>
     </string-array>
     <string name="action_add">Add New Note</string>
     <string name="action_websearch">Web search</string>

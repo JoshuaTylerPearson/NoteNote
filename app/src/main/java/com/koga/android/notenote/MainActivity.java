@@ -8,12 +8,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,9 +23,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @SuppressLint("InflateParams")
 public class MainActivity extends Activity {
@@ -37,6 +42,8 @@ public class MainActivity extends Activity {
     private ArrayAdapter<String> notesAdapter;
     //private ArrayAdapter<String> spinnerAdapter;
     private boolean drawerOpen;
+    private Button newNoteBtn;
+    private Button cancelBtn;
 
     private String result;
     private int promptIndex;
@@ -101,11 +108,14 @@ public class MainActivity extends Activity {
             
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
+        /*
         if (savedInstanceState == null) {
             //selectItem(0);
         }
+        */
     }
+
+
 
     public void initializeElements() {
 
@@ -160,116 +170,93 @@ public class MainActivity extends Activity {
 
             setContentView(R.layout.slct_dlg_fgmt);
             //this needs to be called when the subject it clicked and display a selection fragment not be in the + button thing
-            /*
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            slct_fgmt fragment = new slct_fgmt();
-            fragmentTransaction.add(R.id.slct_layout, fragment);
-            fragmentTransaction.commit();
+
+            View.OnClickListener slctBtnListner = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getApplicationContext(), "button attached",
+                            Toast.LENGTH_SHORT).show();
+                    switch(view.getId())
+                    {
+                        case R.id.new_noteBtn:
+
+                            LayoutInflater li = LayoutInflater.from(MainActivity.this);
+                            promptsView = li.inflate(R.layout.prompts, null);
+                            promptSpinner = (Spinner) promptsView.findViewById(R.id.spinner1);
+                            directorySpinner = (Spinner) promptsView.findViewById(R.id.directorySpinner);
+                            directoryLabel = (TextView) promptsView.findViewById(R.id.textView2);
+                            //take user input, create new array index
+                            alertDialogBuilder = new AlertDialog.Builder(
+                                    MainActivity.this);
+
+                            //set prompts.xml to alertdialog builder
+                            alertDialogBuilder.setView(promptsView);
+
+                            promptIndex = promptSpinner.getSelectedItemPosition();
+                            PromptSpinnerListener promptListen = new PromptSpinnerListener();
+                            promptSpinner.setOnItemSelectedListener((OnItemSelectedListener) promptListen);
+
+                            final EditText userInput = (EditText) promptsView
+                                    .findViewById(R.id.editTextDialogUserInput);
+
+                            // set dialog message
+                            alertDialogBuilder
+                                    .setCancelable(false)
+                                    .setPositiveButton("OK",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog,int id) {
+                                                    // get user input and set it to result
+                                                    // edit text
+
+                                                    promptIndex = promptSpinner.getSelectedItemPosition();
+                                                    result = userInput.getText().toString();
+                                                    if(promptIndex == 2)
+                                                    {
+                                                        notesDividersSubjects.add(result);
+                                                        mDrawerList.setAdapter(notesAdapter);
+                                                        notesAdapter.notifyDataSetChanged();
+
+                                                    }
+                                                    else if(promptIndex == 1)
+                                                    {
+                                                        notesDividersSubjects.add(result); //notesDividersSubjects.indexOf(directorySpinner.getSelectedItem()),
+                                                        mDrawerList.setAdapter(notesAdapter);
+                                                        notesAdapter.notifyDataSetChanged();
+                                                    }
+                                                }
+
+                                            })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog,int id) {
+                                                    dialog.cancel();
 
 
-        /*
-        case R.id.action_websearch:
-            // create intent to perform web search for this planet
-            Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-            intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
-            // catch event that there's no activity to handle intent
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
-            }
-            return true;
-        */
-        /*
-         * 
-         *   
-         *   
-         *   
-         *   Add button functionality needs work
-         *   
-         *   
-         *   
-         *   
-         *   
-         *   
-         */
-        /*
-        case R.id.action_add:
-        	
-        	LayoutInflater li = LayoutInflater.from(MainActivity.this);
-			promptsView = li.inflate(R.layout.prompts, null);
-			promptSpinner = (Spinner) promptsView.findViewById(R.id.spinner1);
-			directorySpinner = (Spinner) promptsView.findViewById(R.id.directorySpinner);
-			directoryLabel = (TextView) promptsView.findViewById(R.id.textView2);
-			
-			//directorySpinner.setAdapter(notesAdapter);
-			//notesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			
-        	//take user input, create new array index
-        	alertDialogBuilder = new AlertDialog.Builder(
-					MainActivity.this);
-        	
-			//set prompts.xml to alertdialog builder
-			alertDialogBuilder.setView(promptsView);
-			
-			promptIndex = promptSpinner.getSelectedItemPosition();
-			PromptSpinnerListener promptListen = new PromptSpinnerListener();
-			promptSpinner.setOnItemSelectedListener((OnItemSelectedListener) promptListen);
-			
-			final EditText userInput = (EditText) promptsView
-					.findViewById(R.id.editTextDialogUserInput);
+                                                }
 
-			// set dialog message
-			alertDialogBuilder
-				.setCancelable(false)
-				.setPositiveButton("OK",
-				  new DialogInterface.OnClickListener() {
-				    public void onClick(DialogInterface dialog,int id) {
-					// get user input and set it to result
-					// edit text
-				    	
-					    promptIndex = promptSpinner.getSelectedItemPosition();
-						result = userInput.getText().toString();
-						if(promptIndex == 2)
-						{
-							notesDividersSubjects.add(result);
-							mDrawerList.setAdapter(notesAdapter);
-							notesAdapter.notifyDataSetChanged();
-	
-						}
-						else if(promptIndex == 1)
-						{
-							//Toast.makeText(getApplicationContext(),
-								      //  "Selected: " + directorySpinner.getSelectedItem(), Toast.LENGTH_LONG).show();
-							notesDividersSubjects.add("   " + result); //notesDividersSubjects.indexOf(directorySpinner.getSelectedItem()),
-							mDrawerList.setAdapter(notesAdapter);
-							notesAdapter.notifyDataSetChanged();
-						}
-						else if(promptIndex == 0)
-						{
-							notesDividersSubjects.add("       " + result); // notesDividersSubjects.indexOf(directorySpinner.getSelectedItem()),
-							mDrawerList.setAdapter(notesAdapter);
-							notesAdapter.notifyDataSetChanged();
-						}
-				    
-				    }
-				  })
-				.setNegativeButton("Cancel",
-				  new DialogInterface.OnClickListener() {
-				    public void onClick(DialogInterface dialog,int id) {
-					dialog.cancel();
-				    }
-				  });
+                                            });
+                            // create alert dialog
+                            AlertDialog alertDialog = alertDialogBuilder.create();
 
-			// create alert dialog
-			AlertDialog alertDialog = alertDialogBuilder.create();
+                            // show it
+                            alertDialog.show();
 
-			// show it
-			alertDialog.show();
-		
+
+                        case R.id.can_slct:
+                            setContentView(R.layout.activity_main);
+
+                    }
+
+                }//onClick
+            };//anon onClickListener
+
+            newNoteBtn = (Button) findViewById(R.id.new_noteBtn);
+            cancelBtn = (Button) findViewById(R.id.can_slct);
+            newNoteBtn.setOnClickListener(slctBtnListner);
+            cancelBtn.setOnClickListener(slctBtnListner);
+         
         	return true;
-        */
+
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -288,8 +275,7 @@ public class MainActivity extends Activity {
 		public void onItemSelected(AdapterView<?> parent, View view,
 				int position, long id) {
 			
-		//Toast.makeText(parent.getContext(),
-			       //  "Position: " + position, Toast.LENGTH_LONG).show();
+
 			
 			if(position == 2)
 			{
@@ -350,18 +336,4 @@ public class MainActivity extends Activity {
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
-
-    
-    //    EDIT FOLLOWING CODE TO MAKE LIST ITEMS
-    /*
-    public class NoteFragment extends Fragment {
-        //public static final String ARG_PLANET_NUMBER = "planet_number";
-
-        public NoteFragment() {
-            // Empty constructor required for fragment subclasses
-        }
-
-       
-    }
-    */
-}
+}//MainActivity
