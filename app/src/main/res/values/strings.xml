@@ -8,17 +8,15 @@
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
     <string name="action_add">Add New Note</string>
-<<<<<<< HEAD
+
     <string-array name="prompt_array">
         <item >New Note</item>
         <item >New Divider</item>
     </string-array>
-    <string name="title">Title:</string>
-    <string name="directory">Under:</string>
-=======
+
     <string name="New_zSubject">"New Subject"</string>
     <string name="title">New Subject:</string>
->>>>>>> origin/master
+
     <string name="can">Cancel</string>
     <string name="new_note">New Note</string>
 </resources>

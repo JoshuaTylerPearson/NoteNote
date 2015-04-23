@@ -10,6 +10,7 @@ package com.koga.android.notenote;
 public final class R {
     public static final class array {
         public static final int notes_array=0x7f050000;
+        public static final int prompt_array=0x7f050001;
     }
     public static final class attr {
     }
@@ -21,39 +22,21 @@ public final class R {
         public static final int sym_action_add=0x7f020004;
     }
     public static final class id {
-<<<<<<< HEAD
-        public static final int action_add=0x7f080012;
-        public static final int can_slct=0x7f08000c;
-=======
-        public static final int action_add=0x7f08000e;
+        public static final int action_add=0x7f08000f;
         public static final int can_slct=0x7f080009;
->>>>>>> origin/master
         public static final int content_frame=0x7f080001;
         public static final int drawer_layout=0x7f080000;
         public static final int editTextDialogUserInput=0x7f080006;
-<<<<<<< HEAD
-        public static final int expandableListView=0x7f080010;
-        public static final int image=0x7f080003;
-        public static final int layout_root=0x7f080004;
-        public static final int left_drawer=0x7f080002;
-        public static final int new_note=0x7f08000d;
-        public static final int new_noteBtn=0x7f08000f;
-        public static final int slct_dlg_fgmt=0x7f08000a;
-        public static final int slct_layout=0x7f08000b;
-        public static final int space=0x7f08000e;
-        public static final int spinner1=0x7f080007;
-        public static final int sym_action_add=0x7f080011;
-=======
-        public static final int expandableListView=0x7f08000c;
+        public static final int expandableListView=0x7f08000d;
         public static final int image=0x7f080003;
         public static final int layout_root=0x7f080004;
         public static final int left_drawer=0x7f080002;
         public static final int new_note=0x7f08000a;
+        public static final int new_noteBtn=0x7f08000c;
         public static final int slct_dlg_fgmt=0x7f080007;
         public static final int slct_layout=0x7f080008;
         public static final int space=0x7f08000b;
-        public static final int sym_action_add=0x7f08000d;
->>>>>>> origin/master
+        public static final int sym_action_add=0x7f08000e;
         public static final int textView1=0x7f080005;
     }
     public static final class layout {

@@ -176,10 +176,10 @@ public class DataBase extends SQLiteOpenHelper {
 
     public void addSubject(String subject) { //adds subject
 
-        SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(SUBJECT_PRIMARY_KEY, subject);
+
+        SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_SUBJECT, null, values);
         db.close();

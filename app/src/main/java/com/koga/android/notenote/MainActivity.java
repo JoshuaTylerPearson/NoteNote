@@ -10,6 +10,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -23,10 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-<<<<<<< HEAD
 import android.widget.Button;
-=======
->>>>>>> origin/master
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -64,8 +62,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeElements();
-        
         notesDividersSubjects = new ArrayList<String>();
         mTitle = mDrawerTitle = getTitle();
         
@@ -75,13 +71,15 @@ public class MainActivity extends Activity {
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
-       
+        initializeElements();
+
         notesAdapter = new ArrayAdapter<String>(this,
                R.layout.drawer_list_item, notesDividersSubjects);
-
-        
-        
+        mDrawerList.setAdapter(notesAdapter);
+        notesAdapter.notifyDataSetChanged();
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -122,8 +120,7 @@ public class MainActivity extends Activity {
 
     public void initializeElements() {
 
-        db = new DataBase(getBaseContext());
-
+        db = new DataBase(this);
         notesDividersSubjects = db.getSubjects();
 
     }
@@ -196,6 +193,7 @@ public class MainActivity extends Activity {
                                     result = userInput.getText().toString();
                                     if (!db.isSubject(result)) {
                                         db.addSubject(result);
+
                                         notesDividersSubjects.add(result);
                                         mDrawerList.setAdapter(notesAdapter);
                                         notesAdapter.notifyDataSetChanged();
@@ -224,94 +222,9 @@ public class MainActivity extends Activity {
             setContentView(R.layout.slct_dlg_fgmt);
             */
             //this needs to be called when the subject it clicked and display a selection fragment not be in the + button thing
-<<<<<<< HEAD
-
-            View.OnClickListener slctBtnListner = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getApplicationContext(), "button attached",
-                            Toast.LENGTH_SHORT).show();
-                    switch(view.getId())
-                    {
-                        case R.id.new_noteBtn:
-
-                            LayoutInflater li = LayoutInflater.from(MainActivity.this);
-                            promptsView = li.inflate(R.layout.prompts, null);
-                            promptSpinner = (Spinner) promptsView.findViewById(R.id.spinner1);
-                            directorySpinner = (Spinner) promptsView.findViewById(R.id.directorySpinner);
-                            directoryLabel = (TextView) promptsView.findViewById(R.id.textView2);
-                            //take user input, create new array index
-                            alertDialogBuilder = new AlertDialog.Builder(
-                                    MainActivity.this);
-
-                            //set prompts.xml to alertdialog builder
-                            alertDialogBuilder.setView(promptsView);
-
-                            promptIndex = promptSpinner.getSelectedItemPosition();
-                            PromptSpinnerListener promptListen = new PromptSpinnerListener();
-                            promptSpinner.setOnItemSelectedListener((OnItemSelectedListener) promptListen);
-
-                            final EditText userInput = (EditText) promptsView
-                                    .findViewById(R.id.editTextDialogUserInput);
-
-                            // set dialog message
-                            alertDialogBuilder
-                                    .setCancelable(false)
-                                    .setPositiveButton("OK",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog,int id) {
-                                                    // get user input and set it to result
-                                                    // edit text
-
-                                                    promptIndex = promptSpinner.getSelectedItemPosition();
-                                                    result = userInput.getText().toString();
-                                                    if(promptIndex == 2)
-                                                    {
-                                                        notesDividersSubjects.add(result);
-                                                        mDrawerList.setAdapter(notesAdapter);
-                                                        notesAdapter.notifyDataSetChanged();
-
-                                                    }
-                                                    else if(promptIndex == 1)
-                                                    {
-                                                        notesDividersSubjects.add(result); //notesDividersSubjects.indexOf(directorySpinner.getSelectedItem()),
-                                                        mDrawerList.setAdapter(notesAdapter);
-                                                        notesAdapter.notifyDataSetChanged();
-                                                    }
-                                                }
-
-                                            })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog,int id) {
-                                                    dialog.cancel();
 
 
-                                                }
 
-                                            });
-                            // create alert dialog
-                            AlertDialog alertDialog = alertDialogBuilder.create();
-
-                            // show it
-                            alertDialog.show();
-
-
-                        case R.id.can_slct:
-                            setContentView(R.layout.activity_main);
-
-                    }
-
-                }//onClick
-            };//anon onClickListener
-
-            newNoteBtn = (Button) findViewById(R.id.new_noteBtn);
-            cancelBtn = (Button) findViewById(R.id.can_slct);
-            newNoteBtn.setOnClickListener(slctBtnListner);
-            cancelBtn.setOnClickListener(slctBtnListner);
-         
-        	return true;
-=======
             /*
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -319,7 +232,7 @@ public class MainActivity extends Activity {
             fragmentTransaction.add(R.id.slct_layout, fragment);
             fragmentTransaction.commit();
             */
->>>>>>> origin/master
+
 
         default:
             return super.onOptionsItemSelected(item);
