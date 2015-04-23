@@ -18,5 +18,7 @@
     <string name="title">New Subject:</string>
 
     <string name="can">Cancel</string>
-    <string name="new_note">New Note</string>
+    <string name="new_note">New Divider</string>
+    <string name="newDivider">New Divider:</string>
+    <string name="newNoteString">New Note:</string>
 </resources>

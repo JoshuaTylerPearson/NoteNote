@@ -112,6 +112,42 @@ public class DataBase extends SQLiteOpenHelper {
         return herp;
     }
 
+    public boolean isDivider(String subject, String divider) { //checks database for subject
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DIV , null);  //+ " WHERE "+ SUBJECT_FOREIGN_KEY + " = '" + subject +"'"
+        boolean herp = false;
+
+        if(cursor.moveToFirst()) {
+
+            do {
+                if (cursor.getString(2).equals(divider) && cursor.getString(1).equals(subject)){
+                    herp = true;
+                }
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return herp;
+    }
+
+    public boolean isNote(String subject, String divider, String note) { //checks database for subject
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES , null);  //+ " WHERE "+ SUBJECT_FOREIGN_KEY + " = '" + subject +"'"
+        boolean herp = false;
+
+        if(cursor.moveToFirst()) {
+
+            do {
+                if (cursor.getString(0).equals(divider) && cursor.getString(1).equals(subject) && cursor.getString(2).equals(note)){
+                    herp = true;
+                }
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return herp;
+    }
+
     public ArrayList<String> getDividers(String sbj) { //gets all the dividers for subject
         ArrayList<String> dividers = new ArrayList<String>();
 
@@ -132,7 +168,7 @@ public class DataBase extends SQLiteOpenHelper {
         ArrayList<String> notes = new ArrayList<String>();
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES + " WHERE " + DIV_FOREIGN_KEY + "='" + div + "' AND ;" + SBJ_FOREIGN_KEY + "='" + sbj + "';", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES + " WHERE " + DIV_FOREIGN_KEY + "='" + div + "' AND " + SBJ_FOREIGN_KEY + "='" + sbj + "';", null);
 
         if(cursor.moveToFirst()) {
             do {

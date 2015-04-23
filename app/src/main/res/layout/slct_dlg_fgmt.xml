@@ -3,7 +3,8 @@
     android:id="@+id/slct_dlg_fgmt"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:background="@color/gray">
 
 
     <Button
@@ -12,11 +13,12 @@
         android:text="@string/new_note"
         android:id="@+id/new_noteBtn"
         android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
+        android:background="#fff9fff9"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/space"
-        android:layout_toLeftOf="@+id/space" />
+        android:layout_toLeftOf="@+id/space"
+        android:layout_toStartOf="@+id/space" />
 
     <Button
         android:layout_width="wrap_content"
@@ -25,18 +27,22 @@
         android:id="@+id/can_slct"
         android:longClickable="true"
         android:layout_gravity="right"
-        android:layout_alignParentBottom="true"
+        android:background="#fffbfff8"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_toRightOf="@+id/space"
         android:layout_toEndOf="@+id/space" />
 
-    <ExpandableListView
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/expandableListView"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/can_slct" />
+        android:entries="@color/black"
+        android:background="@color/gray"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/new_noteBtn" />
 
     <Space
         android:layout_width="20dp"

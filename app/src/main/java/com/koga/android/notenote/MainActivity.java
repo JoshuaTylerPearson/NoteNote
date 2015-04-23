@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 @SuppressLint("InflateParams")
 public class MainActivity extends Activity {
@@ -43,11 +44,15 @@ public class MainActivity extends Activity {
 
     private Button newNoteBtn;
     private Button cancelBtn;
-    private Boolean drawerOpen = false;
+    private boolean drawerOpen = false;
 
     private String result;
     private String sbj;
+    private String div;
+    private int id;
     private View promptsView;
+    private View dividerView;
+    private View notesView;
     private AlertDialog.Builder alertDialogBuilder;
 
     private DataBase db;
@@ -66,7 +71,7 @@ public class MainActivity extends Activity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        slctList = (ListView) findViewById(R.id.expandableListView);
+
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -77,8 +82,6 @@ public class MainActivity extends Activity {
         mDrawerList.setAdapter(subjectAdapter);
         subjectAdapter.notifyDataSetChanged();
         //previous 4 lines populate list from db
-
-
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -108,6 +111,7 @@ public class MainActivity extends Activity {
             }
             
         };
+
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -118,31 +122,80 @@ public class MainActivity extends Activity {
                 for(String d: temp) {
                     ArrayList<String> tempnote = db.getNotes(sbj, d);
                     for(String n: tempnote)
-                        divNotesList.add(divNotesList.indexOf(d), n);
+                        divNotesList.add(divNotesList.indexOf(d) + 1, n);
                 }
 
                 setContentView(R.layout.slct_dlg_fgmt);
+                slctList = (ListView) findViewById(R.id.expandableListView);
+                divNotesAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                        R.layout.drawer_list_item, divNotesList);
+                slctList.setAdapter(divNotesAdapter);
+                divNotesAdapter.notifyDataSetChanged();
 
+                newNoteBtn = (Button) findViewById(R.id.new_noteBtn);
+                cancelBtn = (Button) findViewById(R.id.can_slct);
+                newNoteBtn.setOnClickListener(new slctListener());
+                cancelBtn.setOnClickListener(new slctListener());
+
+                registerForContextMenu(slctList);
+                slctList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        div = ((String) slctList.getItemAtPosition(i));
+                        //Toast.makeText(getApplicationContext(), div, Toast.LENGTH_SHORT).show();
+                        showNotes(div);
+                    }
+                });
             }
-        });
-        try {
-            divNotesAdapter = new ArrayAdapter<String>(getApplicationContext(),
-                    R.layout.drawer_list_item, divNotesList);
-            slctList.setAdapter(divNotesAdapter);
-            divNotesAdapter.notifyDataSetChanged();
-        } catch (Exception e) {}
+        });//close onItemClick drawer listview
+
 
         registerForContextMenu(mDrawerList);
+
+
     } //end onCreate
+
+/////////////////////////////////////slct_dlg_fgmt btn listener/////////////////////////////////////
+    private class slctListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()){
+                case R.id.new_noteBtn:
+                    showDivider(sbj);
+                    //if(!itemSelected)
+                       // Toast.makeText(getApplicationContext(), "Please select a divider or press '+' to create one.", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.can_slct:
+                    setContentView(R.layout.activity_main);
+                    onCreate(Bundle.EMPTY);
+                    break;
+            }
+
+        }
+    }
+
     //////////////////////////////////begin long press////////////////////////////////////
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 
         ListView lv = (ListView) v;
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        sbj = ((String) mDrawerList.getItemAtPosition(info.position)).toString();
-        menu.setHeaderTitle(sbj);
-        menu.add(Menu.NONE, 1, Menu.NONE, "Delete");
+
+        if(R.id.left_drawer == v.getId()) {
+            //Toast.makeText(getApplicationContext(), "subject list", Toast.LENGTH_SHORT).show();
+            id = R.id.left_drawer;
+            sbj = ((String) mDrawerList.getItemAtPosition(info.position));
+            menu.setHeaderTitle(sbj);
+            menu.add(Menu.NONE, 1, Menu.NONE, "Delete");
+        }
+        if(R.id.expandableListView == v.getId()){
+            //Toast.makeText(getApplicationContext(), "divider list", Toast.LENGTH_SHORT).show();
+            id = R.id.expandableListView;
+            div = ((String) slctList.getItemAtPosition(info.position));
+            menu.setHeaderTitle(div);
+            menu.add(Menu.NONE, 1, Menu.NONE, "Delete");
+        }
 
     }//tied to mDrawerList, should try to tie to slct listview (expandable listview)
 
@@ -151,12 +204,20 @@ public class MainActivity extends Activity {
 
         switch (item.getItemId()) {
             case 1:
+                if(id == R.id.left_drawer) {
+                    //Toast.makeText(getApplicationContext(), "subject list", Toast.LENGTH_SHORT).show();
+                    db.deleteSbj(sbj);
+                    subjectsList.remove(sbj);
+                    mDrawerList.setAdapter(subjectAdapter);
+                    subjectAdapter.notifyDataSetChanged();
+                }
+                if(id == R.id.expandableListView){
+                    //Toast.makeText(getApplicationContext(), "divider list", Toast.LENGTH_SHORT).show();
+                    db.deleteDiv(div);
+                    divNotesList.remove(div);
 
-                db.deleteSbj(sbj);
-                subjectsList.remove(sbj);
-                mDrawerList.setAdapter(subjectAdapter);
-                subjectAdapter.notifyDataSetChanged();
-
+                    divNotesAdapter.notifyDataSetChanged();
+                }
             return true;
             default:
                 return super.onContextItemSelected(item);
@@ -170,6 +231,110 @@ public class MainActivity extends Activity {
         subjectsList = db.getSubjects();
 
     }
+
+    public void showDivider(String subject){
+
+        LayoutInflater li = LayoutInflater.from(MainActivity.this);
+        dividerView = li.inflate(R.layout.dividers, null);
+
+
+
+        alertDialogBuilder = new AlertDialog.Builder(
+                MainActivity.this);
+
+        //set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(dividerView);
+
+        final EditText userInput = (EditText) dividerView
+                .findViewById(R.id.editTextDialogUserInput);
+        final String sbj = subject;
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // get user input and set it to result
+                                // edit text
+                                result = userInput.getText().toString();
+                                if (!db.isDivider(sbj, result)) {
+                                    //Toast.makeText(getApplicationContext(), "Subject: " + sbj + "bool: " + (db.isDivider(sbj, result)), Toast.LENGTH_SHORT).show();
+                                    db.addDivider(sbj, result);
+
+                                    divNotesList.add(result);
+                                    slctList.setAdapter(divNotesAdapter);
+                                    divNotesAdapter.notifyDataSetChanged();
+
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
+
+        //Toast.makeText(getApplicationContext(), "Things can happen here!", Toast.LENGTH_SHORT).show();
+
+    }//close showDivider
+
+    public void showNotes(String divider){
+
+        LayoutInflater li = LayoutInflater.from(MainActivity.this);
+        notesView = li.inflate(R.layout.notes, null);
+
+
+
+        alertDialogBuilder = new AlertDialog.Builder(
+                MainActivity.this);
+
+        //set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(notesView);
+
+        final EditText userInput = (EditText) notesView
+                .findViewById(R.id.editTextDialogUserInput);
+        final String div = divider;
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // get user input and set it to result
+                                // edit text
+                                result = userInput.getText().toString();
+                                if (!db.isDivider(sbj, result)) {
+                                    //Toast.makeText(getApplicationContext(), "Subject: " + sbj + "bool: " + (db.isDivider(sbj, result)), Toast.LENGTH_SHORT).show();
+                                    db.addDivider(sbj, result);
+
+                                    divNotesList.add(result);
+                                    slctList.setAdapter(divNotesAdapter);
+                                    divNotesAdapter.notifyDataSetChanged();
+
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
+
+        //Toast.makeText(getApplicationContext(), "Things can happen here!", Toast.LENGTH_SHORT).show();
+
+    }//close showDivider
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
