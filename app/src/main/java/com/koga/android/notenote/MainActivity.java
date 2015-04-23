@@ -6,15 +6,13 @@ import java.util.ArrayList;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,36 +20,34 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 @SuppressLint("InflateParams")
 public class MainActivity extends Activity {
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private ArrayList<String> notesDividersSubjects;
-    private ArrayAdapter<String> notesAdapter;
-    //private ArrayAdapter<String> spinnerAdapter;
-    private boolean drawerOpen;
+
+    private ListView mDrawerList;
+    private ArrayList<String> subjectsList;
+    private ArrayAdapter<String> subjectAdapter;
+
+    private ListView slctList;
+    private ArrayList<String> divNotesList;
+    private ArrayAdapter<String> divNotesAdapter;
+
     private Button newNoteBtn;
     private Button cancelBtn;
+    private Boolean drawerOpen = false;
 
     private String result;
-    private int promptIndex;
-    private Spinner promptSpinner;
+    private String sbj;
     private View promptsView;
-    private Spinner directorySpinner;
-    private TextView directoryLabel;
     private AlertDialog.Builder alertDialogBuilder;
 
     private DataBase db;
@@ -62,29 +58,33 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        notesDividersSubjects = new ArrayList<String>();
+        subjectsList = new ArrayList<String>();
+        divNotesList = new ArrayList<String>();
+
         mTitle = mDrawerTitle = getTitle();
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        slctList = (ListView) findViewById(R.id.expandableListView);
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
         initializeElements();
+        subjectAdapter = new ArrayAdapter<String>(this,
+               R.layout.drawer_list_item, subjectsList);
+        mDrawerList.setAdapter(subjectAdapter);
+        subjectAdapter.notifyDataSetChanged();
+        //previous 4 lines populate list from db
 
-        notesAdapter = new ArrayAdapter<String>(this,
-               R.layout.drawer_list_item, notesDividersSubjects);
-        mDrawerList.setAdapter(notesAdapter);
-        notesAdapter.notifyDataSetChanged();
+
+
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-                
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
@@ -109,49 +109,80 @@ public class MainActivity extends Activity {
             
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        /*
-        if (savedInstanceState == null) {
-            //selectItem(0);
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                sbj = mDrawerList.getItemAtPosition(i).toString();
+                divNotesList = db.getDividers(sbj);
+                ArrayList<String> temp = divNotesList;
+                for(String d: temp) {
+                    ArrayList<String> tempnote = db.getNotes(sbj, d);
+                    for(String n: tempnote)
+                        divNotesList.add(divNotesList.indexOf(d), n);
+                }
+
+                setContentView(R.layout.slct_dlg_fgmt);
+
+            }
+        });
+        try {
+            divNotesAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                    R.layout.drawer_list_item, divNotesList);
+            slctList.setAdapter(divNotesAdapter);
+            divNotesAdapter.notifyDataSetChanged();
+        } catch (Exception e) {}
+
+        registerForContextMenu(mDrawerList);
+    } //end onCreate
+    //////////////////////////////////begin long press////////////////////////////////////
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        ListView lv = (ListView) v;
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        sbj = ((String) mDrawerList.getItemAtPosition(info.position)).toString();
+        menu.setHeaderTitle(sbj);
+        menu.add(Menu.NONE, 1, Menu.NONE, "Delete");
+
+    }//tied to mDrawerList, should try to tie to slct listview (expandable listview)
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case 1:
+
+                db.deleteSbj(sbj);
+                subjectsList.remove(sbj);
+                mDrawerList.setAdapter(subjectAdapter);
+                subjectAdapter.notifyDataSetChanged();
+
+            return true;
+            default:
+                return super.onContextItemSelected(item);
         }
-        */
+
     }
-
-
-
+//////////////////////////////////end long press////////////////////////////////////
     public void initializeElements() {
 
         db = new DataBase(this);
-        notesDividersSubjects = db.getSubjects();
+        subjectsList = db.getSubjects();
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /*
-    	boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-    	if(!drawerOpen){
-    	MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    	}
-    	else{}
-    	*/ ///useless atm
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.slide_menu_actions, menu);
         return super.onCreateOptionsMenu(menu);
 
     }
 
-    /* Called whenever we call invalidateOptionsMenu() */
+    /* Called by invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        /*
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        if(drawerOpen)
-        menu.findItem(R.id.action_add).setVisible(drawerOpen);
-        */
-        
         return super.onPrepareOptionsMenu(menu);
     }
     
@@ -166,13 +197,12 @@ public class MainActivity extends Activity {
         switch(item.getItemId()) {
         case R.id.action_add:
 
+            if(!drawerOpen)
+                mDrawerLayout.openDrawer(Gravity.START);
+
             LayoutInflater li = LayoutInflater.from(MainActivity.this);
             promptsView = li.inflate(R.layout.prompts, null);
 
-            //directorySpinner.setAdapter(notesAdapter);
-            //notesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            //take user input, create new array index
             alertDialogBuilder = new AlertDialog.Builder(
                     MainActivity.this);
 
@@ -194,9 +224,9 @@ public class MainActivity extends Activity {
                                     if (!db.isSubject(result)) {
                                         db.addSubject(result);
 
-                                        notesDividersSubjects.add(result);
-                                        mDrawerList.setAdapter(notesAdapter);
-                                        notesAdapter.notifyDataSetChanged();
+                                        subjectsList.add(result);
+                                        mDrawerList.setAdapter(subjectAdapter);
+                                        subjectAdapter.notifyDataSetChanged();
                                     }
                                 }
                             })
@@ -209,36 +239,14 @@ public class MainActivity extends Activity {
 
             // create alert dialog
             AlertDialog alertDialog = alertDialogBuilder.create();
-
             // show it
             alertDialog.show();
-
             return true;
-
-            /*
-            if(!drawerOpen)
-                mDrawerLayout.openDrawer(Gravity.START);
-
-            setContentView(R.layout.slct_dlg_fgmt);
-            */
-            //this needs to be called when the subject it clicked and display a selection fragment not be in the + button thing
-
-
-
-            /*
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            slct_fgmt fragment = new slct_fgmt();
-            fragmentTransaction.add(R.id.slct_layout, fragment);
-            fragmentTransaction.commit();
-            */
-
-
         default:
             return super.onOptionsItemSelected(item);
         }
-    }
-
+    }//onOptionsItemSelected
+/////////////////////////////////////////useless?//////////////////////////////////////////////////
     /* The click listner for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -246,59 +254,12 @@ public class MainActivity extends Activity {
             //selectItem(position);
         }
     }
-    private class PromptSpinnerListener implements OnItemSelectedListener {
-
-		@Override
-		public void onItemSelected(AdapterView<?> parent, View view,
-				int position, long id) {
-			
-
-			
-			if(position == 2)
-			{
-				
-				directorySpinner.setEnabled(false);
-				directoryLabel.setEnabled(false);
-				alertDialogBuilder.setView(promptsView);
-			}
-			else
-			{
-				directorySpinner.setEnabled(true);
-				directoryLabel.setEnabled(true);
-				alertDialogBuilder.setView(promptsView);
-			}
-		
-		}
-
-		@Override
-		public void onNothingSelected(AdapterView<?> parent) {
-		
-		}
-    	
-    }
-/*
-    private void selectItem(int position) {
-        // update the main content by replacing fragments
-        Fragment fragment = new PlanetFragment();
-        Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }
-*/
+/////////////////////////////////////////useless?//////////////////////////////////////////////////
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
         getActionBar().setTitle(mTitle);
     }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
