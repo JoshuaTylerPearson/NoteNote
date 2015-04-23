@@ -31,9 +31,9 @@ public final class R {
         public static final int expandableListView=0x7f08000e;
         public static final int image=0x7f080003;
         public static final int layout_root=0x7f080004;
-        public static final int layout_slct=0x7f08000a;
         public static final int left_drawer=0x7f080002;
         public static final int new_note=0x7f08000c;
+        public static final int slct_dlg_fgmt=0x7f08000a;
         public static final int space=0x7f08000d;
         public static final int spinner1=0x7f080007;
         public static final int sym_action_add=0x7f08000f;

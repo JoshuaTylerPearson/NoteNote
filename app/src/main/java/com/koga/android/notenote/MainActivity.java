@@ -163,7 +163,7 @@ public class MainActivity extends Activity {
 
             slct_fgmt fragment = new slct_fgmt();
             //fragmentTransaction.add(R.id.layout_slct, fragment);
-            fragmentTransaction.add(R.id.layout_slct, fragment);
+            fragmentTransaction.add(R.id.slct_dlg_fgmt, fragment);
             fragmentTransaction.commit();
 
 
