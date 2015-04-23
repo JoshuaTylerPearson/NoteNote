@@ -6,41 +6,48 @@
     android:weightSum="1">
 
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/can"
-        android:id="@+id/can_slct"
-        android:longClickable="true"
-        android:layout_alignTop="@+id/new_note"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/space"
-        android:layout_toStartOf="@+id/space" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/slct_layout">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/new_note"
-        android:id="@+id/new_note"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/space"
-        android:layout_toEndOf="@+id/space" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/can"
+            android:id="@+id/can_slct"
+            android:longClickable="true"
+            android:layout_alignTop="@+id/new_note"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/space"
+            android:layout_toStartOf="@+id/space" />
 
-    <ExpandableListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/expandableListView"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/can_slct" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/new_note"
+            android:id="@+id/new_note"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/space"
+            android:layout_toEndOf="@+id/space" />
 
-    <Space
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/space" />
+        <ExpandableListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/expandableListView"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/can_slct" />
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/space" />
+    </LinearLayout>
 
 </RelativeLayout><!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/layout/slct_dlg_fgmt.xml -->
