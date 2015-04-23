@@ -23,7 +23,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+<<<<<<< HEAD
 import android.widget.Button;
+=======
+>>>>>>> origin/master
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -165,11 +168,63 @@ public class MainActivity extends Activity {
         // Handle action buttons
         switch(item.getItemId()) {
         case R.id.action_add:
+
+            LayoutInflater li = LayoutInflater.from(MainActivity.this);
+            promptsView = li.inflate(R.layout.prompts, null);
+
+            //directorySpinner.setAdapter(notesAdapter);
+            //notesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            //take user input, create new array index
+            alertDialogBuilder = new AlertDialog.Builder(
+                    MainActivity.this);
+
+            //set prompts.xml to alertdialog builder
+            alertDialogBuilder.setView(promptsView);
+
+            final EditText userInput = (EditText) promptsView
+                    .findViewById(R.id.editTextDialogUserInput);
+
+            // set dialog message
+            alertDialogBuilder
+                    .setCancelable(false)
+                    .setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    // get user input and set it to result
+                                    // edit text
+                                    result = userInput.getText().toString();
+                                    if (!db.isSubject(result)) {
+                                        db.addSubject(result);
+                                        notesDividersSubjects.add(result);
+                                        mDrawerList.setAdapter(notesAdapter);
+                                        notesAdapter.notifyDataSetChanged();
+                                    }
+                                }
+                            })
+                    .setNegativeButton("Cancel",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
+            return true;
+
+            /*
             if(!drawerOpen)
                 mDrawerLayout.openDrawer(Gravity.START);
 
             setContentView(R.layout.slct_dlg_fgmt);
+            */
             //this needs to be called when the subject it clicked and display a selection fragment not be in the + button thing
+<<<<<<< HEAD
 
             View.OnClickListener slctBtnListner = new View.OnClickListener() {
                 @Override
@@ -256,6 +311,15 @@ public class MainActivity extends Activity {
             cancelBtn.setOnClickListener(slctBtnListner);
          
         	return true;
+=======
+            /*
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            slct_fgmt fragment = new slct_fgmt();
+            fragmentTransaction.add(R.id.slct_layout, fragment);
+            fragmentTransaction.commit();
+            */
+>>>>>>> origin/master
 
         default:
             return super.onOptionsItemSelected(item);

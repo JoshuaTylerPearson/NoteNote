@@ -10,7 +10,6 @@ package com.koga.android.notenote;
 public final class R {
     public static final class array {
         public static final int notes_array=0x7f050000;
-        public static final int prompt_array=0x7f050001;
     }
     public static final class attr {
     }
@@ -22,12 +21,17 @@ public final class R {
         public static final int sym_action_add=0x7f020004;
     }
     public static final class id {
+<<<<<<< HEAD
         public static final int action_add=0x7f080012;
         public static final int can_slct=0x7f08000c;
+=======
+        public static final int action_add=0x7f08000e;
+        public static final int can_slct=0x7f080009;
+>>>>>>> origin/master
         public static final int content_frame=0x7f080001;
-        public static final int directorySpinner=0x7f080009;
         public static final int drawer_layout=0x7f080000;
         public static final int editTextDialogUserInput=0x7f080006;
+<<<<<<< HEAD
         public static final int expandableListView=0x7f080010;
         public static final int image=0x7f080003;
         public static final int layout_root=0x7f080004;
@@ -39,8 +43,18 @@ public final class R {
         public static final int space=0x7f08000e;
         public static final int spinner1=0x7f080007;
         public static final int sym_action_add=0x7f080011;
+=======
+        public static final int expandableListView=0x7f08000c;
+        public static final int image=0x7f080003;
+        public static final int layout_root=0x7f080004;
+        public static final int left_drawer=0x7f080002;
+        public static final int new_note=0x7f08000a;
+        public static final int slct_dlg_fgmt=0x7f080007;
+        public static final int slct_layout=0x7f080008;
+        public static final int space=0x7f08000b;
+        public static final int sym_action_add=0x7f08000d;
+>>>>>>> origin/master
         public static final int textView1=0x7f080005;
-        public static final int textView2=0x7f080008;
     }
     public static final class layout {
         public static final int activity_main=0x7f040000;
@@ -57,12 +71,12 @@ public final class R {
         public static final int ic_launcher=0x7f030000;
     }
     public static final class string {
-        public static final int action_add=0x7f060000;
-        public static final int action_websearch=0x7f060001;
-        public static final int app_name=0x7f060002;
-        public static final int app_not_available=0x7f060003;
-        public static final int can=0x7f060004;
-        public static final int directory=0x7f060005;
+        public static final int New_zSubject=0x7f060000;
+        public static final int action_add=0x7f060001;
+        public static final int action_websearch=0x7f060002;
+        public static final int app_name=0x7f060003;
+        public static final int app_not_available=0x7f060004;
+        public static final int can=0x7f060005;
         public static final int drawer_close=0x7f060006;
         public static final int drawer_open=0x7f060007;
         public static final int new_note=0x7f060008;

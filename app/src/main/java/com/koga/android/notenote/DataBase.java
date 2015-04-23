@@ -94,6 +94,23 @@ public class DataBase extends SQLiteOpenHelper {
         db.close();
         return subjects;
     }
+    public boolean isSubject(String subject) { //checks database for subject
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SUBJECT, null);
+        boolean herp = false;
+
+        if(cursor.moveToFirst()) {
+
+            do {
+                if (cursor.getString(0).equals(subject)){
+                    herp = true;
+                }
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return herp;
+    }
 
     public ArrayList<String> getDividers(String sbj) { //gets all the dividers for subject
         ArrayList<String> dividers = new ArrayList<String>();
