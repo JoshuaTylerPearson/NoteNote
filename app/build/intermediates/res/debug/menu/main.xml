@@ -19,4 +19,4 @@
           android:icon="@drawable/sym_action_add"
           android:title="@string/action_websearch"
           android:showAsAction="ifRoom|withText" />
-</menu><!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/menu/main.xml -->
+</menu><!-- From: file:/C:/Users/John/Documents/GitHub/NoteNote/app/src/main/res/menu/main.xml -->
