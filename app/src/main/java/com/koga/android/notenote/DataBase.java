@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.util.DisplayMetrics;
+import android.view.Display;
 
 import java.util.ArrayList;
 
@@ -32,6 +34,7 @@ public class DataBase extends SQLiteOpenHelper {
     private static final String SBJ_FOREIGN_KEY = "subject";
     private static final String NOTE_PRIMARY_KEY = "note";
     private static final String BITMAP_KEY = "bitmap";
+    private Context context;
 
 
 
@@ -75,7 +78,10 @@ public class DataBase extends SQLiteOpenHelper {
 
 
     public DataBase(Context context) {
+
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
+
     }
 
     public ArrayList<String> getSubjects() { //gets all the subjects in database
@@ -232,7 +238,15 @@ public class DataBase extends SQLiteOpenHelper {
         values.put(NOTE_PRIMARY_KEY, note);
         if(image!=null)
             values.put(BITMAP_KEY, DbBitmapUtility.getBytes(image));
+        else {
+            DisplayMetrics display = context.getResources().getDisplayMetrics();
+            int w = display.widthPixels;
+            int h = display.heightPixels;
 
+            Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+            Bitmap bit = Bitmap.createBitmap(w, h, conf);
+            values.put(BITMAP_KEY, DbBitmapUtility.getBytes(bit));
+        }
         db.insert(TABLE_SUBJECT, null, values);
         db.close();
 

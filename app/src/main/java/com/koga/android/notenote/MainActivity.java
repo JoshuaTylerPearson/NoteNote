@@ -128,9 +128,10 @@ public class MainActivity extends Activity {
 
                 ArrayList<String> temp = divNotesList;
                 for(String d: temp) {
-                    Toast.makeText(getApplicationContext(), "In", Toast.LENGTH_SHORT).show();
+
                     ArrayList<String> tempnote = db.getNotes(sbj, d);
                     for(String n: tempnote) {
+                        Toast.makeText(getApplicationContext(), "In", Toast.LENGTH_SHORT).show();
                         divNotesList.add(divNotesList.indexOf(d) + 1, n);
 
                     }
