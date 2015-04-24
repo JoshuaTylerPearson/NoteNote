@@ -66,6 +66,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+///////////////////unnecessary?
+        int screenSize =
+                getResources().getConfiguration().screenLayout &
+                        Configuration.SCREENLAYOUT_SIZE_MASK;
 
         subjectsList = new ArrayList<String>();
         divNotesList = new ArrayList<String>();
@@ -105,12 +109,14 @@ public class MainActivity extends Activity {
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(mTitle);
                 drawerOpen = false;
+
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
                 getActionBar().setTitle(mDrawerTitle);
                 drawerOpen = true;
+
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
             
@@ -158,7 +164,7 @@ public class MainActivity extends Activity {
 
                         div = ((String) slctList.getItemAtPosition(i));
                         if(div.contains("\t\t\t"))
-                                return;
+                                setContentView(R.layout.note_view);
                         else
                             showNotes(div);
                     }
@@ -414,60 +420,66 @@ public class MainActivity extends Activity {
         switch(item.getItemId()) {
         case R.id.action_add:
 
+            //setContentView(R.layout.activity_main);
+            //onCreate(Bundle.EMPTY);
+
             if(!drawerOpen)
-                mDrawerLayout.openDrawer(Gravity.START);
+                mDrawerLayout.openDrawer(Gravity.LEFT);
 
-            LayoutInflater li = LayoutInflater.from(MainActivity.this);
-            promptsView = li.inflate(R.layout.prompts, null);
+           // if(drawerOpen) {
+                LayoutInflater li = LayoutInflater.from(MainActivity.this);
+                promptsView = li.inflate(R.layout.prompts, null);
 
-            alertDialogBuilder = new AlertDialog.Builder(
-                    MainActivity.this);
+                alertDialogBuilder = new AlertDialog.Builder(
+                        MainActivity.this);
 
-            //set prompts.xml to alertdialog builder
-            alertDialogBuilder.setView(promptsView);
+                //set prompts.xml to alertdialog builder
+                alertDialogBuilder.setView(promptsView);
 
-            final EditText userInput = (EditText) promptsView
-                    .findViewById(R.id.editTextDialogUserInput);
+                final EditText userInput = (EditText) promptsView
+                        .findViewById(R.id.editTextDialogUserInput);
 
-            // set dialog message
-            alertDialogBuilder
-                    .setCancelable(false)
-                    .setPositiveButton("OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,int id) {
-                                    // get user input and set it to result
-                                    // edit text
-                                    result = userInput.getText().toString();
-                                    if (!result.trim().isEmpty() && result != null) {
+                // set dialog message
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // get user input and set it to result
+                                        // edit text
+                                        result = userInput.getText().toString();
+                                        if (!result.trim().isEmpty() && result != null) {
 
-                                        if (!db.isSubject(result)) {
-                                            db.addSubject(result);
+                                            if (!db.isSubject(result)) {
+                                                db.addSubject(result);
 
-                                            subjectsList.add(result);
-                                            mDrawerList.setAdapter(subjectAdapter);
-                                            subjectAdapter.notifyDataSetChanged();
+                                                subjectsList.add(result);
+                                                mDrawerList.setAdapter(subjectAdapter);
+                                                subjectAdapter.notifyDataSetChanged();
+                                            }
+                                        } else {
+
+                                            Toast.makeText(getApplicationContext(), "Please enter a title.", Toast.LENGTH_SHORT).show();
+
                                         }
-                                    } else {
-
-                                        Toast.makeText(getApplicationContext(), "Please enter a title.", Toast.LENGTH_SHORT).show();
-
                                     }
-                                }
-                            })
-                    .setNegativeButton("Cancel",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,int id) {
-                                    dialog.cancel();
-                                }
-                            });
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
 
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            // show it
-            alertDialog.show();
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                // show it
+                alertDialog.show();
+            //}
             return true;
-        default:
-            return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
     }//onOptionsItemSelected
 /////////////////////////////////////////useless?//////////////////////////////////////////////////

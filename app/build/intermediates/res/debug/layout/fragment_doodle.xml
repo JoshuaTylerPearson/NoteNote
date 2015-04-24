@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <view
+        android:id="@+id/doodleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.koga.android.notenote.DoodleView" />
+
+</FrameLayout><!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/layout/fragment_doodle.xml -->

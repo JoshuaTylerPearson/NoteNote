@@ -18,6 +18,12 @@ public final class R {
         public static final int black=0x7f060000;
         public static final int gray=0x7f060001;
     }
+    public static final class dimen {
+        public static final int activity_horizontal_margin=0x7f070000;
+        public static final int activity_vertical_margin=0x7f070001;
+        public static final int color_view_height=0x7f070002;
+        public static final int line_imageview_height=0x7f070003;
+    }
     public static final class drawable {
         public static final int action_search=0x7f020000;
         public static final int drawer_shadow=0x7f020001;
@@ -26,49 +32,102 @@ public final class R {
         public static final int sym_action_add=0x7f020004;
     }
     public static final class id {
-        public static final int action_add=0x7f09000e;
-        public static final int can_slct=0x7f09000b;
-        public static final int content_frame=0x7f090001;
-        public static final int divider_root=0x7f090003;
-        public static final int drawer_layout=0x7f090000;
-        public static final int editTextDialogUserInput=0x7f090005;
-        public static final int expandableListView=0x7f09000c;
-        public static final int layout_root=0x7f090007;
-        public static final int left_drawer=0x7f090002;
-        public static final int new_noteBtn=0x7f090009;
-        public static final int note_root=0x7f090006;
-        public static final int slct_dlg_fgmt=0x7f090008;
-        public static final int space=0x7f09000a;
-        public static final int sym_action_add=0x7f09000d;
-        public static final int textView1=0x7f090004;
+        public static final int action_add=0x7f0b0023;
+        public static final int alphaSeekBar=0x7f0b0008;
+        public static final int alphaTextView=0x7f0b0007;
+        public static final int blueSeekBar=0x7f0b000e;
+        public static final int blueTextView=0x7f0b000d;
+        public static final int can_slct=0x7f0b001a;
+        public static final int clear=0x7f0b001f;
+        public static final int color=0x7f0b001c;
+        public static final int colorDialogGridLayout=0x7f0b0006;
+        public static final int colorView=0x7f0b000f;
+        public static final int content_frame=0x7f0b0001;
+        public static final int divider_root=0x7f0b0003;
+        public static final int doodleFragment=0x7f0b0014;
+        public static final int doodleView=0x7f0b0010;
+        public static final int drawer_layout=0x7f0b0000;
+        public static final int editTextDialogUserInput=0x7f0b0005;
+        public static final int eraser=0x7f0b001e;
+        public static final int expandableListView=0x7f0b001b;
+        public static final int greenSeekBar=0x7f0b000c;
+        public static final int greenTextView=0x7f0b000b;
+        public static final int layout_root=0x7f0b0016;
+        public static final int left_drawer=0x7f0b0002;
+        public static final int lineWidth=0x7f0b001d;
+        public static final int lineWidthDialogGridLayout=0x7f0b0011;
+        public static final int new_noteBtn=0x7f0b0018;
+        public static final int note_root=0x7f0b0015;
+        public static final int print=0x7f0b0021;
+        public static final int redSeekBar=0x7f0b000a;
+        public static final int redTextView=0x7f0b0009;
+        public static final int save=0x7f0b0020;
+        public static final int slct_dlg_fgmt=0x7f0b0017;
+        public static final int space=0x7f0b0019;
+        public static final int sym_action_add=0x7f0b0022;
+        public static final int textView1=0x7f0b0004;
+        public static final int widthImageView=0x7f0b0012;
+        public static final int widthSeekBar=0x7f0b0013;
     }
     public static final class layout {
         public static final int activity_main=0x7f040000;
         public static final int dividers=0x7f040001;
         public static final int drawer_list_item=0x7f040002;
-        public static final int notes=0x7f040003;
-        public static final int prompts=0x7f040004;
-        public static final int slct_dlg_fgmt=0x7f040005;
+        public static final int fragment_color=0x7f040003;
+        public static final int fragment_doodle=0x7f040004;
+        public static final int fragment_line_width=0x7f040005;
+        public static final int note_view=0x7f040006;
+        public static final int notes=0x7f040007;
+        public static final int prompts=0x7f040008;
+        public static final int slct_dlg_fgmt=0x7f040009;
     }
     public static final class menu {
-        public static final int main=0x7f080000;
-        public static final int slide_menu_actions=0x7f080001;
+        public static final int doodle_fragment_menu=0x7f0a0000;
+        public static final int main=0x7f0a0001;
+        public static final int slide_menu_actions=0x7f0a0002;
     }
     public static final class mipmap {
         public static final int ic_launcher=0x7f030000;
     }
     public static final class string {
-        public static final int New_zSubject=0x7f070000;
-        public static final int action_add=0x7f070001;
-        public static final int action_websearch=0x7f070002;
-        public static final int app_name=0x7f070003;
-        public static final int app_not_available=0x7f070004;
-        public static final int can=0x7f070005;
-        public static final int drawer_close=0x7f070006;
-        public static final int drawer_open=0x7f070007;
-        public static final int newDivider=0x7f070008;
-        public static final int newNoteString=0x7f070009;
-        public static final int new_note=0x7f07000a;
-        public static final int title=0x7f07000b;
+        public static final int New_zSubject=0x7f080000;
+        public static final int action_add=0x7f080001;
+        public static final int action_websearch=0x7f080002;
+        public static final int app_name=0x7f080003;
+        public static final int app_not_available=0x7f080004;
+        public static final int button_cancel=0x7f080005;
+        public static final int button_erase=0x7f080006;
+        public static final int button_set_color=0x7f080007;
+        public static final int button_set_line_width=0x7f080008;
+        public static final int can=0x7f080009;
+        public static final int color_set_background=0x7f08000a;
+        public static final int drawer_close=0x7f08000b;
+        public static final int drawer_open=0x7f08000c;
+        public static final int label_alpha=0x7f08000d;
+        public static final int label_blue=0x7f08000e;
+        public static final int label_green=0x7f08000f;
+        public static final int label_red=0x7f080010;
+        public static final int line_imageview_description=0x7f080011;
+        public static final int menuitem_clear=0x7f080012;
+        public static final int menuitem_color=0x7f080013;
+        public static final int menuitem_eraser=0x7f080014;
+        public static final int menuitem_line_width=0x7f080015;
+        public static final int menuitem_print=0x7f080016;
+        public static final int menuitem_save=0x7f080017;
+        public static final int message_erase=0x7f080018;
+        public static final int message_error_printing=0x7f080019;
+        public static final int message_error_saving=0x7f08001a;
+        public static final int message_saved=0x7f08001b;
+        public static final int newDivider=0x7f08001c;
+        public static final int newNoteString=0x7f08001d;
+        public static final int new_note=0x7f08001e;
+        public static final int title=0x7f08001f;
+        public static final int title_color_dialog=0x7f080020;
+        public static final int title_line_width_dialog=0x7f080021;
+    }
+    public static final class style {
+        /**  API 14 theme customizations can go here. 
+         */
+        public static final int AppBaseTheme=0x7f090000;
     }
 }

@@ -17,6 +17,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/sym_action_add"
           android:icon="@drawable/sym_action_add"
-          android:title="@string/action_websearch"
+          android:title="@string/action_add"
           android:showAsAction="ifRoom|withText" />
 </menu><!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/menu/main.xml -->
