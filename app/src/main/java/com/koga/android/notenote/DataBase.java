@@ -7,15 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.view.Display;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -201,7 +197,7 @@ public class DataBase extends SQLiteOpenHelper {
         return notes;
     }
 
-    public Bitmap getBitmaps(Context c) { //gets the bitmap for note
+    public Bitmap getBitmaps() { //gets the bitmap for note
         Bitmap image = null;
         sbjct = MainActivity.sbj;
         dvdr = MainActivity.div;
@@ -209,26 +205,14 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         //Cursor cursor = db.rawQuery("SELECT * FROM ")
         //this.dvdr =
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES + " WHERE " + DIV_FOREIGN_KEY + "='" + this.dvdr + "' AND " + SBJ_FOREIGN_KEY + "='" + this.sbjct + "' AND " + NOTE_PRIMARY_KEY + "='" + this.noot + "';", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES + " WHERE " + DIV_FOREIGN_KEY + "='" + dvdr + "' AND " + SBJ_FOREIGN_KEY + "='" + sbjct + "' AND " + NOTE_PRIMARY_KEY + "='" + noot + "';", null);
 
         if(cursor.moveToFirst()) {
             do {
 
-                if(cursor.getString(3)!=null) {
-
-                    try {
-
-                        
-                        ContextWrapper cw = new ContextWrapper(c);
-                        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-
-                        File f=new File(directory, sbjct + dvdr + noot + ".jpg");
-                        image = BitmapFactory.decodeStream(new FileInputStream(f));
-                    }
-                    catch (FileNotFoundException e)
-                    {
-                        e.printStackTrace();
-                    }
+                if(cursor.getBlob(3)!=null) {
+                    Toast.makeText(context, "Entry does have a bitmap!", Toast.LENGTH_SHORT).show();
+                    image = (DbBitmapUtility.getImage(cursor.getBlob(3)));
                 }
             } while(cursor.moveToNext());
         }
@@ -287,32 +271,11 @@ public class DataBase extends SQLiteOpenHelper {
 
     }
 
-    public void addBitmap(Context c, Bitmap image) { //adds note to divider in subject
+    public void addBitmap(Bitmap image) { //adds note to divider in subject
 
         sbjct = MainActivity.sbj;
         dvdr = MainActivity.div;
         noot = MainActivity.note.trim();
-
-        String fileName = sbjct + dvdr + noot + ".jpg";
-
-        ContextWrapper cw = new ContextWrapper(c);
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-
-        // Create imageDir
-        File mypath=new File(directory,fileName);
-
-        FileOutputStream fos = null;
-        try {
-
-            fos = new FileOutputStream(mypath);
-
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         SQLiteDatabase db = this.getWritableDatabase();
         /*
@@ -322,7 +285,7 @@ public class DataBase extends SQLiteOpenHelper {
         */
 
         ContentValues values = new ContentValues();
-        values.put(BITMAP_KEY, fileName);
+        values.put(BITMAP_KEY, DbBitmapUtility.getString(image));
         String where = "" + NOTE_PRIMARY_KEY + " = '"+ noot + "' AND " + SBJ_FOREIGN_KEY + " = '" + sbjct +"' AND "
                 + DIV_FOREIGN_KEY + " = '" + dvdr + "'";
         //Toast.makeText(context,where, Toast.LENGTH_LONG).show();

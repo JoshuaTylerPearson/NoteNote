@@ -81,7 +81,7 @@ public class DoodleView extends View
 
        //bitmap = db.getBitmaps();
 
-       Bitmap workingBitmap = db.getBitmaps(context);
+       Bitmap workingBitmap = db.getBitmaps();
        bitmap = workingBitmap.copy(workingBitmap.getConfig(), true);
        bitmapCanvas = new Canvas(bitmap);
        bitmapCanvas.drawBitmap(bitmap, 0, 0, paintScreen);
@@ -94,7 +94,7 @@ public class DoodleView extends View
    {
        //try {
           // bitmap = Bitmap.createBitmap(db.getBitmaps());
-       Bitmap workingBitmap = db.getBitmaps(context);
+       Bitmap workingBitmap = db.getBitmaps();
        bitmap = workingBitmap.copy(workingBitmap.getConfig(), true);
            //Toast.makeText(context, "derp", Toast.LENGTH_LONG).show();
            bitmapCanvas = new Canvas(bitmap);
@@ -359,7 +359,7 @@ public class DoodleView extends View
    // save the current image to the Gallery
    public void saveImage()
    {
-       db.addBitmap(context, bitmap);
+       db.addBitmap(bitmap);
       /*
       String name = "DroidNoteDraw" + System.currentTimeMillis() + ".jpg";
       
