@@ -125,7 +125,6 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 sbj = mDrawerList.getItemAtPosition(i).toString();
-                db.setSbj(sbj);
                 setContentView(R.layout.slct_dlg_fgmt);
                 slctList = (ListView) findViewById(R.id.expandableListView);
                 int numNotes = 0;
@@ -164,29 +163,23 @@ public class MainActivity extends Activity {
                         String select = ((String) slctList.getItemAtPosition(i));
                         if(select.contains("\t\t\t")) {
                             note = select;
-                            db.setSbj(sbj);
-                            if(div != null)
-                                db.setDiv(div);
-                            else{
+                            if(div == null){
                                 for(int f = divNotesList.indexOf(note); f >= 0; f--)
                                 {
                                     String check = divNotesList.get(f);
                                     if(!check.contains("\t\t\t")) {
-                                        db.setDiv(check);
                                         div = check;
                                         //Toast.makeText(getApplicationContext(),check + " " + note + " " + divNotesList.toString(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
                             }
-                            db.setNote(note.trim());
                             //inflated = true;
                             //Toast.makeText(getApplicationContext(), db.getBitmaps().get, Toast.LENGTH_SHORT).show();
                             setContentView(R.layout.note_view);
                         }
                         else {
                             div = select;
-                            db.setDiv(div);
                             showNotes(div);
                         }
                     }
