@@ -47,10 +47,12 @@ public class MainActivity extends Activity {
     private Button newNoteBtn;
     private Button cancelBtn;
     private boolean drawerOpen = false;
+    private boolean isNote = false;
 
     private String result;
     private String sbj;
     private String div;
+    private String note;
     private int id;
     private View promptsView;
     private View dividerView;
@@ -121,12 +123,28 @@ public class MainActivity extends Activity {
                 sbj = mDrawerList.getItemAtPosition(i).toString();
                 setContentView(R.layout.slct_dlg_fgmt);
                 slctList = (ListView) findViewById(R.id.expandableListView);
-
+                int numNotes = 0;
                 divNotesList = db.getDividers(sbj);
+
                 divNotesAdapter = new ArrayAdapter<String>(getApplicationContext(),
                         R.layout.drawer_list_item, divNotesList);
                 slctList.setAdapter(divNotesAdapter);
                 divNotesAdapter.notifyDataSetChanged();
+
+                ArrayList<String> temp = divNotesList;
+                int tSize = temp.size();
+                for(int x = 0; x < tSize; x++) {
+                    String d = divNotesList.get(x);
+                    int place = divNotesList.indexOf(d);
+                    ArrayList<String> tempnote = db.getNotes(sbj, d);
+                    for(int y = 0; y < tempnote.size(); y++) {
+                        //int gerp = divNotesList.indexOf(x);
+                        divNotesList.add(place + 1, "\t\t\t" + tempnote.get(y));
+                    }
+                }
+
+                divNotesAdapter.notifyDataSetChanged();
+
 
                 newNoteBtn = (Button) findViewById(R.id.new_noteBtn);
                 cancelBtn = (Button) findViewById(R.id.can_slct);
@@ -139,8 +157,10 @@ public class MainActivity extends Activity {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                         div = ((String) slctList.getItemAtPosition(i));
-
-                        showNotes(div);
+                        if(div.contains("\t\t\t"))
+                                return;
+                        else
+                            showNotes(div);
                     }
                 });
             }
@@ -189,12 +209,19 @@ public class MainActivity extends Activity {
         if(R.id.expandableListView == v.getId()){
             //Toast.makeText(getApplicationContext(), "divider list", Toast.LENGTH_SHORT).show();
             id = R.id.expandableListView;
-            if(db.isDivider(sbj, ((String) slctList.getItemAtPosition(info.position)))) {
+            div = ((String) slctList.getItemAtPosition(info.position));
+            if(div.contains("\t\t\t")){
+                note = ((String) slctList.getItemAtPosition(info.position));
+                menu.setHeaderTitle(note);
+                menu.add(Menu.NONE, 1, Menu.NONE, "Delete this note?");
+                isNote = true;
+            }
+            else{
                 div = ((String) slctList.getItemAtPosition(info.position));
                 menu.setHeaderTitle(div);
-                menu.add(Menu.NONE, 1, Menu.NONE, "Delete");
+                menu.add(Menu.NONE, 1, Menu.NONE, "Delete this divider?");
             }
-            else if ()
+
         }
 
     }//tied to mDrawerList, should try to tie to slct listview (expandable listview)
@@ -212,11 +239,18 @@ public class MainActivity extends Activity {
                     subjectAdapter.notifyDataSetChanged();
                 }
                 if(id == R.id.expandableListView){
-                    //Toast.makeText(getApplicationContext(), "divider list", Toast.LENGTH_SHORT).show();
-                    db.deleteDiv(div);
-                    divNotesList.remove(div);
+                    if(!isNote) {
+                        db.deleteDiv(div);
+                        divNotesList.remove(div);
+                        divNotesAdapter.notifyDataSetChanged();
+                    }
+                    else{
 
-                    divNotesAdapter.notifyDataSetChanged();
+                        db.deleteNote(note);
+                        divNotesList.remove(note);
+                        divNotesAdapter.notifyDataSetChanged();
+                        isNote = false;
+                    }
                 }
             return true;
             default:

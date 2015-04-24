@@ -143,7 +143,7 @@ public class DataBase extends SQLiteOpenHelper {
         boolean herp = false;
 
         if(cursor.moveToFirst()) {
-            Toast.makeText(context, "cursor has data", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "cursor has data", Toast.LENGTH_SHORT).show();
             do {
                 if (cursor.getString(0).equals(divider) && cursor.getString(1).equals(subject) && cursor.getString(2).equals(note)){
                     herp = true;
@@ -238,7 +238,7 @@ public class DataBase extends SQLiteOpenHelper {
         values.put(SBJ_FOREIGN_KEY, subject);
         values.put(NOTE_PRIMARY_KEY, note);
         values.put(BITMAP_KEY, DbBitmapUtility.getBytes(image));
-        Toast.makeText(context,values.toString(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(context,values.toString(), Toast.LENGTH_LONG).show();
         db.insert(TABLE_NOTES, null, values);
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES, null);
        // Toast.makeText(context, "Subject: "+ cursor.getString(1)+ " Divider: "+ cursor.getString(0) + " Note: " + cursor.getString(2), Toast.LENGTH_LONG ).show();
@@ -264,8 +264,9 @@ public class DataBase extends SQLiteOpenHelper {
     }
 
     public void deleteNote(String note) { //del note
+        Toast.makeText(context, note.trim(), Toast.LENGTH_SHORT).show();
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NOTES, (NOTE_PRIMARY_KEY + " = '" +  note + "'"), null);
+        db.delete(TABLE_NOTES, (NOTE_PRIMARY_KEY + " = '" +  note.trim() + "'"), null);
 
         db.close();
     }
