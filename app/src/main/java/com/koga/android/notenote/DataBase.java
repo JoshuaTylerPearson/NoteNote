@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,7 +35,7 @@ public class DataBase extends SQLiteOpenHelper {
     private static final String SBJ_FOREIGN_KEY = "subject";
     private static final String NOTE_PRIMARY_KEY = "note";
     private static final String BITMAP_KEY = "bitmap";
-    private Context context;
+    private Context context;//for toasts, remove later
 
 
 
@@ -61,7 +62,7 @@ public class DataBase extends SQLiteOpenHelper {
                 + DIV_FOREIGN_KEY + " TEXT,"
                 + SBJ_FOREIGN_KEY + " TEXT,"
                 + NOTE_PRIMARY_KEY + " TEXT PRIMARY KEY,"
-                + BITMAP_KEY + "BLOB, "
+                + BITMAP_KEY + " BLOB, "
                 + "FOREIGN KEY(" + SBJ_FOREIGN_KEY + ")"
                 + "REFERENCES " + TABLE_SUBJECT + "("
                 + SUBJECT_PRIMARY_KEY + "),"
@@ -142,7 +143,7 @@ public class DataBase extends SQLiteOpenHelper {
         boolean herp = false;
 
         if(cursor.moveToFirst()) {
-
+            Toast.makeText(context, "cursor has data", Toast.LENGTH_SHORT).show();
             do {
                 if (cursor.getString(0).equals(divider) && cursor.getString(1).equals(subject) && cursor.getString(2).equals(note)){
                     herp = true;
@@ -233,21 +234,14 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(SBJ_FOREIGN_KEY, subject);
         values.put(DIV_FOREIGN_KEY, divider);
+        values.put(SBJ_FOREIGN_KEY, subject);
         values.put(NOTE_PRIMARY_KEY, note);
-        if(image!=null)
-            values.put(BITMAP_KEY, DbBitmapUtility.getBytes(image));
-        else {
-            DisplayMetrics display = context.getResources().getDisplayMetrics();
-            int w = display.widthPixels;
-            int h = display.heightPixels;
-
-            Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-            Bitmap bit = Bitmap.createBitmap(w, h, conf);
-            values.put(BITMAP_KEY, DbBitmapUtility.getBytes(bit));
-        }
-        db.insert(TABLE_SUBJECT, null, values);
+        values.put(BITMAP_KEY, DbBitmapUtility.getBytes(image));
+        Toast.makeText(context,values.toString(), Toast.LENGTH_LONG).show();
+        db.insert(TABLE_NOTES, null, values);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES, null);
+       // Toast.makeText(context, "Subject: "+ cursor.getString(1)+ " Divider: "+ cursor.getString(0) + " Note: " + cursor.getString(2), Toast.LENGTH_LONG ).show();
         db.close();
 
     }

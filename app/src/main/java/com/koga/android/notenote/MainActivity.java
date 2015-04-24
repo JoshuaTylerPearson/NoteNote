@@ -8,10 +8,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -126,21 +128,6 @@ public class MainActivity extends Activity {
                 slctList.setAdapter(divNotesAdapter);
                 divNotesAdapter.notifyDataSetChanged();
 
-                ArrayList<String> temp = divNotesList;
-                for(String d: temp) {
-
-                    ArrayList<String> tempnote = db.getNotes(sbj, d);
-                    for(String n: tempnote) {
-                        Toast.makeText(getApplicationContext(), "In", Toast.LENGTH_SHORT).show();
-                        divNotesList.add(divNotesList.indexOf(d) + 1, n);
-
-                    }
-                }
-                divNotesAdapter.notifyDataSetChanged();
-
-
-
-
                 newNoteBtn = (Button) findViewById(R.id.new_noteBtn);
                 cancelBtn = (Button) findViewById(R.id.can_slct);
                 newNoteBtn.setOnClickListener(new slctListener());
@@ -150,6 +137,7 @@ public class MainActivity extends Activity {
                 slctList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                         div = ((String) slctList.getItemAtPosition(i));
 
                         showNotes(div);
@@ -201,9 +189,12 @@ public class MainActivity extends Activity {
         if(R.id.expandableListView == v.getId()){
             //Toast.makeText(getApplicationContext(), "divider list", Toast.LENGTH_SHORT).show();
             id = R.id.expandableListView;
-            div = ((String) slctList.getItemAtPosition(info.position));
-            menu.setHeaderTitle(div);
-            menu.add(Menu.NONE, 1, Menu.NONE, "Delete");
+            if(db.isDivider(sbj, ((String) slctList.getItemAtPosition(info.position)))) {
+                div = ((String) slctList.getItemAtPosition(info.position));
+                menu.setHeaderTitle(div);
+                menu.add(Menu.NONE, 1, Menu.NONE, "Delete");
+            }
+            else if ()
         }
 
     }//tied to mDrawerList, should try to tie to slct listview (expandable listview)
@@ -315,10 +306,18 @@ public class MainActivity extends Activity {
                                 // edit text
                                 result = userInput.getText().toString();
                                 if (!db.isNote(sbj, div, result)) {
-                                    //Toast.makeText(getApplicationContext(), "Subject: " + sbj + "bool: " + (db.isDivider(sbj, result)), Toast.LENGTH_SHORT).show();
-                                    db.addNote(result, sbj, div, null);
+                                   // Toast.makeText(getApplicationContext(), "Subject: " + sbj + " div:" + div + " bool: " + (db.isDivider(sbj, result)), Toast.LENGTH_SHORT).show();
 
-                                    divNotesList.add(divNotesList.indexOf(div) + 1, "\t\t\t" + result);
+                                    DisplayMetrics display = getApplicationContext().getResources().getDisplayMetrics();
+                                    int w = display.widthPixels;
+                                    int h = display.heightPixels;
+
+                                    Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+                                    Bitmap bit = Bitmap.createBitmap(w, h, conf);
+
+                                    db.addNote(result, sbj, div, bit);
+
+                                    divNotesList.add(divNotesList.indexOf(div) + 1, "\t\t\t" + result); //
                                     //slctList.setAdapter(divNotesAdapter);
                                     divNotesAdapter.notifyDataSetChanged();
 
