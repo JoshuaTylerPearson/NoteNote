@@ -34,12 +34,16 @@ public class DoodleView extends View
    // used to determine whether user moved a finger enough to draw again   
    private static final float TOUCH_TOLERANCE = 10;
 
+    private DataBase db;
+
    private Bitmap bitmap; // drawing area for display or saving
    private Canvas bitmapCanvas; // used to draw on bitmap   
    protected int backgroundColor = Color.TRANSPARENT;//white
    private final Paint paintScreen; // used to draw bitmap onto screen
    private final Paint paintLine; // used to draw lines onto bitmap
    protected boolean erase = false;
+    private Context context;
+
    //protected int colorB4Erase;
    
    // Maps of current Paths being drawn and Points in those Paths
@@ -48,12 +52,13 @@ public class DoodleView extends View
       new HashMap<Integer, Point>();
 
    // used to hide/show system bars 
-   private GestureDetector singleTapDetector; 
+   private GestureDetector singleTapDetector;
       
    // DoodleView constructor initializes the DoodleView
    public DoodleView(Context context, AttributeSet attrs)  
    {
-      super(context, attrs); // pass context to View's constructor 
+      super(context, attrs); // pass context to View's constructor
+       this.context = context;
       hideSystemBars();
       showSystemBars();
       paintScreen = new Paint(); // used to display bitmap onto screen
@@ -72,13 +77,22 @@ public class DoodleView extends View
       singleTapDetector = 
          new GestureDetector(getContext(), singleTapListener);
 
-
-   } 
+      db = new DataBase(context);
+      this.bitmap = db.getBitmaps();
+   }
 
    // Method onSizeChanged creates Bitmap and Canvas after app displays
    @Override 
    public void onSizeChanged(int w, int h, int oldW, int oldH)
-   { 
+   {
+       try {
+           bitmap = Bitmap.createBitmap(db.getBitmaps());
+           Toast.makeText(context, "derp", Toast.LENGTH_LONG).show();
+           bitmapCanvas = new Canvas(bitmap);
+           bitmap.eraseColor(Color.TRANSPARENT);
+       }catch (Exception ignored){
+
+       }
 	   if(bitmap == null)
 	   {
 		   bitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
@@ -335,7 +349,8 @@ public class DoodleView extends View
    // save the current image to the Gallery
    public void saveImage()
    {
-      
+       db.addBitmap(bitmap);
+      /*
       String name = "DroidNoteDraw" + System.currentTimeMillis() + ".jpg";
       
       // insert the image in the device's gallery
@@ -360,30 +375,9 @@ public class DoodleView extends View
          message.setGravity(Gravity.CENTER, message.getXOffset() / 2, 
             message.getYOffset() / 2);
          message.show(); 
-      } 
+      }
+      */
    } // end method saveImage
-   
-   // print the current image
-   public void printImage()
-   {
-      if (PrintHelper.systemSupportsPrint())
-      {
-         // use Android Support Library's PrintHelper to print image
-         PrintHelper printHelper = new PrintHelper(getContext());
-         
-         // fit image in page bounds and print the image
-         printHelper.setScaleMode(PrintHelper.SCALE_MODE_FIT);
-         printHelper.printBitmap("DroidNoteDraw Image", bitmap); 
-      }
-      else
-      {
-         // display message indicating that system does not allow printing
-         Toast message = Toast.makeText(getContext(), 
-            R.string.message_error_printing, Toast.LENGTH_SHORT);
-         message.setGravity(Gravity.CENTER, message.getXOffset() / 2, 
-            message.getYOffset() / 2);
-         message.show(); 
-      }
-   }
+
 } // end class DoodleView
 

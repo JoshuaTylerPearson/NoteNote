@@ -183,9 +183,6 @@ public class DoodleFragment extends Fragment
          case R.id.save:     
             doodleView.saveImage(); // save the current image
             return true; // consume the menu event
-         case R.id.print:     
-            doodleView.printImage(); // print the current images
-            return true; // consume the menu event
       } // end switch
 
       return super.onOptionsItemSelected(item); // call super's method

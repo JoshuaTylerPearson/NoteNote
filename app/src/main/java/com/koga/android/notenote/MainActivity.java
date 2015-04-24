@@ -163,8 +163,10 @@ public class MainActivity extends Activity {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                         div = ((String) slctList.getItemAtPosition(i));
-                        if(div.contains("\t\t\t"))
-                                setContentView(R.layout.note_view);
+                        if(div.contains("\t\t\t")) {
+                            db.updateReff(sbj, div, note);
+                            setContentView(R.layout.note_view);
+                        }
                         else
                             showNotes(div);
                     }
