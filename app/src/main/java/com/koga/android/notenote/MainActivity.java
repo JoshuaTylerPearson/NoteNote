@@ -285,24 +285,31 @@ public class MainActivity extends Activity {
                 .setCancelable(false)
                 .setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 // get user input and set it to result
                                 // edit text
                                 result = userInput.getText().toString();
-                                if (!db.isDivider(sbj, result)) {
-                                    //Toast.makeText(getApplicationContext(), "Subject: " + sbj + "bool: " + (db.isDivider(sbj, result)), Toast.LENGTH_SHORT).show();
-                                    db.addDivider(sbj, result);
+                                if (!result.trim().isEmpty() && result != null) {
 
-                                    divNotesList.add(result);
-                                    //slctList.setAdapter(divNotesAdapter);
-                                    divNotesAdapter.notifyDataSetChanged();
+                                    if (!db.isDivider(sbj, result)) {
+                                        //Toast.makeText(getApplicationContext(), "Subject: " + sbj + "bool: " + (db.isDivider(sbj, result)), Toast.LENGTH_SHORT).show();
+                                        db.addDivider(sbj, result);
+
+                                        divNotesList.add(result);
+                                        //slctList.setAdapter(divNotesAdapter);
+                                        divNotesAdapter.notifyDataSetChanged();
+
+                                    }
+                                } else {
+
+                                    Toast.makeText(getApplicationContext(), "Please enter a title.", Toast.LENGTH_SHORT).show();
 
                                 }
                             }
                         })
                 .setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -339,21 +346,28 @@ public class MainActivity extends Activity {
                                 // get user input and set it to result
                                 // edit text
                                 result = userInput.getText().toString();
-                                if (!db.isNote(sbj, div, result)) {
-                                   // Toast.makeText(getApplicationContext(), "Subject: " + sbj + " div:" + div + " bool: " + (db.isDivider(sbj, result)), Toast.LENGTH_SHORT).show();
+                                if (!result.trim().isEmpty() && result != null) {
 
-                                    DisplayMetrics display = getApplicationContext().getResources().getDisplayMetrics();
-                                    int w = display.widthPixels;
-                                    int h = display.heightPixels;
+                                    if (!db.isNote(sbj, div, result)) {
+                                        // Toast.makeText(getApplicationContext(), "Subject: " + sbj + " div:" + div + " bool: " + (db.isDivider(sbj, result)), Toast.LENGTH_SHORT).show();
 
-                                    Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-                                    Bitmap bit = Bitmap.createBitmap(w, h, conf);
+                                        DisplayMetrics display = getApplicationContext().getResources().getDisplayMetrics();
+                                        int w = display.widthPixels;
+                                        int h = display.heightPixels;
 
-                                    db.addNote(result, sbj, div, bit);
+                                        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+                                        Bitmap bit = Bitmap.createBitmap(w, h, conf);
 
-                                    divNotesList.add(divNotesList.indexOf(div) + 1, "\t\t\t" + result); //
-                                    //slctList.setAdapter(divNotesAdapter);
-                                    divNotesAdapter.notifyDataSetChanged();
+                                        db.addNote(result, sbj, div, bit);
+
+                                        divNotesList.add(divNotesList.indexOf(div) + 1, "\t\t\t" + result); //
+                                        //slctList.setAdapter(divNotesAdapter);
+                                        divNotesAdapter.notifyDataSetChanged();
+
+                                    }
+                                } else {
+
+                                    Toast.makeText(getApplicationContext(), "Please enter a title.", Toast.LENGTH_SHORT).show();
 
                                 }
                             }
@@ -424,12 +438,19 @@ public class MainActivity extends Activity {
                                     // get user input and set it to result
                                     // edit text
                                     result = userInput.getText().toString();
-                                    if (!db.isSubject(result)) {
-                                        db.addSubject(result);
+                                    if (!result.trim().isEmpty() && result != null) {
 
-                                        subjectsList.add(result);
-                                        mDrawerList.setAdapter(subjectAdapter);
-                                        subjectAdapter.notifyDataSetChanged();
+                                        if (!db.isSubject(result)) {
+                                            db.addSubject(result);
+
+                                            subjectsList.add(result);
+                                            mDrawerList.setAdapter(subjectAdapter);
+                                            subjectAdapter.notifyDataSetChanged();
+                                        }
+                                    } else {
+
+                                        Toast.makeText(getApplicationContext(), "Please enter a title.", Toast.LENGTH_SHORT).show();
+
                                     }
                                 }
                             })
