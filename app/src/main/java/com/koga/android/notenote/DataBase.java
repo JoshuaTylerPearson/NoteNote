@@ -230,7 +230,8 @@ public class DataBase extends SQLiteOpenHelper {
         values.put(SBJ_FOREIGN_KEY, subject);
         values.put(DIV_FOREIGN_KEY, divider);
         values.put(NOTE_PRIMARY_KEY, note);
-        values.put(BITMAP_KEY, DbBitmapUtility.getBytes(image));
+        if(image!=null)
+            values.put(BITMAP_KEY, DbBitmapUtility.getBytes(image));
 
         db.insert(TABLE_SUBJECT, null, values);
         db.close();

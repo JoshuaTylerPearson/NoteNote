@@ -117,20 +117,28 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 sbj = mDrawerList.getItemAtPosition(i).toString();
-                divNotesList = db.getDividers(sbj);
-                ArrayList<String> temp = divNotesList;
-                for(String d: temp) {
-                    ArrayList<String> tempnote = db.getNotes(sbj, d);
-                    for(String n: tempnote)
-                        divNotesList.add(divNotesList.indexOf(d) + 1, n);
-                }
-
                 setContentView(R.layout.slct_dlg_fgmt);
                 slctList = (ListView) findViewById(R.id.expandableListView);
+
+                divNotesList = db.getDividers(sbj);
                 divNotesAdapter = new ArrayAdapter<String>(getApplicationContext(),
                         R.layout.drawer_list_item, divNotesList);
                 slctList.setAdapter(divNotesAdapter);
                 divNotesAdapter.notifyDataSetChanged();
+
+                ArrayList<String> temp = divNotesList;
+                for(String d: temp) {
+                    Toast.makeText(getApplicationContext(), "In", Toast.LENGTH_SHORT).show();
+                    ArrayList<String> tempnote = db.getNotes(sbj, d);
+                    for(String n: tempnote) {
+                        divNotesList.add(divNotesList.indexOf(d) + 1, n);
+
+                    }
+                }
+                divNotesAdapter.notifyDataSetChanged();
+
+
+
 
                 newNoteBtn = (Button) findViewById(R.id.new_noteBtn);
                 cancelBtn = (Button) findViewById(R.id.can_slct);
@@ -142,7 +150,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         div = ((String) slctList.getItemAtPosition(i));
-                        //Toast.makeText(getApplicationContext(), div, Toast.LENGTH_SHORT).show();
+
                         showNotes(div);
                     }
                 });
@@ -237,8 +245,6 @@ public class MainActivity extends Activity {
         LayoutInflater li = LayoutInflater.from(MainActivity.this);
         dividerView = li.inflate(R.layout.dividers, null);
 
-
-
         alertDialogBuilder = new AlertDialog.Builder(
                 MainActivity.this);
 
@@ -262,7 +268,7 @@ public class MainActivity extends Activity {
                                     db.addDivider(sbj, result);
 
                                     divNotesList.add(result);
-                                    slctList.setAdapter(divNotesAdapter);
+                                    //slctList.setAdapter(divNotesAdapter);
                                     divNotesAdapter.notifyDataSetChanged();
 
                                 }
@@ -289,8 +295,6 @@ public class MainActivity extends Activity {
         LayoutInflater li = LayoutInflater.from(MainActivity.this);
         notesView = li.inflate(R.layout.notes, null);
 
-
-
         alertDialogBuilder = new AlertDialog.Builder(
                 MainActivity.this);
 
@@ -309,12 +313,12 @@ public class MainActivity extends Activity {
                                 // get user input and set it to result
                                 // edit text
                                 result = userInput.getText().toString();
-                                if (!db.isDivider(sbj, result)) {
+                                if (!db.isNote(sbj, div, result)) {
                                     //Toast.makeText(getApplicationContext(), "Subject: " + sbj + "bool: " + (db.isDivider(sbj, result)), Toast.LENGTH_SHORT).show();
-                                    db.addDivider(sbj, result);
+                                    db.addNote(result, sbj, div, null);
 
-                                    divNotesList.add(result);
-                                    slctList.setAdapter(divNotesAdapter);
+                                    divNotesList.add(divNotesList.indexOf(div) + 1, "\t\t\t" + result);
+                                    //slctList.setAdapter(divNotesAdapter);
                                     divNotesAdapter.notifyDataSetChanged();
 
                                 }
