@@ -48,11 +48,12 @@ public class MainActivity extends Activity {
     private Button cancelBtn;
     private boolean drawerOpen = false;
     private boolean isNote = false;
+    private boolean inflated = false;
 
     private String result;
-    private String sbj;
-    private String div;
-    private String note;
+    protected static String sbj;
+    protected static String div;
+    protected static String note;
     private int id;
     private View promptsView;
     private View dividerView;
@@ -61,15 +62,12 @@ public class MainActivity extends Activity {
 
     private DataBase db;
 
+
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-///////////////////unnecessary?
-        int screenSize =
-                getResources().getConfiguration().screenLayout &
-                        Configuration.SCREENLAYOUT_SIZE_MASK;
 
         subjectsList = new ArrayList<String>();
         divNotesList = new ArrayList<String>();
@@ -127,6 +125,7 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 sbj = mDrawerList.getItemAtPosition(i).toString();
+                db.setSbj(sbj);
                 setContentView(R.layout.slct_dlg_fgmt);
                 slctList = (ListView) findViewById(R.id.expandableListView);
                 int numNotes = 0;
@@ -162,13 +161,34 @@ public class MainActivity extends Activity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                        div = ((String) slctList.getItemAtPosition(i));
-                        if(div.contains("\t\t\t")) {
-                            db.updateReff(sbj, div, note);
+                        String select = ((String) slctList.getItemAtPosition(i));
+                        if(select.contains("\t\t\t")) {
+                            note = select;
+                            db.setSbj(sbj);
+                            if(div != null)
+                                db.setDiv(div);
+                            else{
+                                for(int f = divNotesList.indexOf(note); f >= 0; f--)
+                                {
+                                    String check = divNotesList.get(f);
+                                    if(!check.contains("\t\t\t")) {
+                                        db.setDiv(check);
+                                        div = check;
+                                        //Toast.makeText(getApplicationContext(),check + " " + note + " " + divNotesList.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            }
+                            db.setNote(note.trim());
+                            //inflated = true;
+                            //Toast.makeText(getApplicationContext(), db.getBitmaps().get, Toast.LENGTH_SHORT).show();
                             setContentView(R.layout.note_view);
                         }
-                        else
+                        else {
+                            div = select;
+                            db.setDiv(div);
                             showNotes(div);
+                        }
                     }
                 });
             }
@@ -358,15 +378,15 @@ public class MainActivity extends Activity {
 
                                     if (!db.isNote(sbj, div, result)) {
                                         // Toast.makeText(getApplicationContext(), "Subject: " + sbj + " div:" + div + " bool: " + (db.isDivider(sbj, result)), Toast.LENGTH_SHORT).show();
-
+                                        /*
                                         DisplayMetrics display = getApplicationContext().getResources().getDisplayMetrics();
                                         int w = display.widthPixels;
                                         int h = display.heightPixels;
 
                                         Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
                                         Bitmap bit = Bitmap.createBitmap(w, h, conf);
-
-                                        db.addNote(result, sbj, div, bit);
+                                        */
+                                        db.addNote(result, sbj, div, null);//bit
 
                                         divNotesList.add(divNotesList.indexOf(div) + 1, "\t\t\t" + result); //
                                         //slctList.setAdapter(divNotesAdapter);
@@ -421,10 +441,20 @@ public class MainActivity extends Activity {
         // Handle action buttons
         switch(item.getItemId()) {
         case R.id.action_add:
+            finishActivity(R.id.doodleFragment);
 
-            //setContentView(R.layout.activity_main);
-            //onCreate(Bundle.EMPTY);
+            /*
+            if(inflated) {
+                //findViewById(R.id.doodleFragment).setVisibility(View.GONE);
+                finish();
+                inflated = false;
+            }
 
+            setContentView(R.layout.activity_main);
+            onCreate(Bundle.EMPTY);
+
+            //onCreate(bundle);
+            */
             if(!drawerOpen)
                 mDrawerLayout.openDrawer(Gravity.LEFT);
 

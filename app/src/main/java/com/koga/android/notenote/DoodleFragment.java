@@ -3,6 +3,7 @@
 package com.koga.android.notenote;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -42,7 +43,8 @@ public class DoodleFragment extends Fragment
    {
       super.onCreateView(inflater, container, savedInstanceState);    
       View view = 
-         inflater.inflate(R.layout.fragment_doodle, container, false);
+         inflater.inflate(R.layout.fragment_doodle, container, true); //attach to root?
+
                
       setHasOptionsMenu(true); // this fragment has menu items to display
 
@@ -187,7 +189,26 @@ public class DoodleFragment extends Fragment
 
       return super.onOptionsItemSelected(item); // call super's method
    } // end method onOptionsItemSelected
-   
+/*
+    @Override
+    public void onDestroy(){
+        Toast.makeText(getActivity(), "Destroyed", Toast.LENGTH_SHORT).show();
+       FragmentManager fm = getFragmentManager();
+
+        Fragment xmlFragment = fm.findFragmentById(R.id.doodleFragment);
+        if (xmlFragment != null) {
+            fm.beginTransaction().remove(xmlFragment).commit();
+        }
+
+        super.onDestroyView();
+        Fragment f = (DoodleFragment) getFragmentManager()
+                .findFragmentById(R.id.doodleFragment);
+        if (f != null)
+
+            getFragmentManager().beginTransaction().remove(f).commit();
+
+    }
+*/
    // returns the DoodleView
    public DoodleView getDoodleView()
    {

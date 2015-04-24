@@ -77,28 +77,40 @@ public class DoodleView extends View
       singleTapDetector = 
          new GestureDetector(getContext(), singleTapListener);
 
-      db = new DataBase(context);
-      this.bitmap = db.getBitmaps();
+      db = new DataBase(getRootView().getContext());
+
+       //bitmap = db.getBitmaps();
+
+       Bitmap workingBitmap= db.getBitmaps();
+       bitmap = workingBitmap.copy(workingBitmap.getConfig(), true);
+       bitmapCanvas = new Canvas(bitmap);
+       bitmapCanvas.drawBitmap(bitmap, 0, 0, paintScreen);
+       invalidate();
    }
 
    // Method onSizeChanged creates Bitmap and Canvas after app displays
    @Override 
    public void onSizeChanged(int w, int h, int oldW, int oldH)
    {
-       try {
-           bitmap = Bitmap.createBitmap(db.getBitmaps());
-           Toast.makeText(context, "derp", Toast.LENGTH_LONG).show();
+       //try {
+          // bitmap = Bitmap.createBitmap(db.getBitmaps());
+       Bitmap workingBitmap = db.getBitmaps();
+       bitmap = workingBitmap.copy(workingBitmap.getConfig(), true);
+           //Toast.makeText(context, "derp", Toast.LENGTH_LONG).show();
            bitmapCanvas = new Canvas(bitmap);
            bitmap.eraseColor(Color.TRANSPARENT);
-       }catch (Exception ignored){
+       //}catch (Exception ignored){
 
-       }
+       //}
+       /*
 	   if(bitmap == null)
 	   {
-		   bitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
+		   //bitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
 		   bitmapCanvas = new Canvas(bitmap);
 		   bitmap.eraseColor(Color.TRANSPARENT);
 	   }
+       */
+       invalidate();
        // erase the Bitmap with white
    } 
    
@@ -172,18 +184,16 @@ public class DoodleView extends View
 	  {	    	  
     	  paintLine.setColor(backgroundColor);
 		  paintLine.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
-		  
-	      // for each path currently being drawn
-			     
+		  // for each path currently being drawn
 	  }
 	  else	  
 		   paintLine.setXfermode(null);
       
-      canvas.drawBitmap(bitmap, 0, 0, paintScreen);      
+      canvas.drawBitmap(bitmap, 0, 0, null);
 	  
       for (Integer key : pathMap.keySet()) 
 		  bitmapCanvas.drawPath(pathMap.get(key), paintLine); // draw line
-   } 
+   }
 
    // hide system bars and action bar
    public void hideSystemBars()

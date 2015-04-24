@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/John/Documents/GitHub/NoteNote/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string-array name="notes_array">
     </string-array>
@@ -8,17 +8,17 @@
         <item>New Note</item>
         <item>New Divider</item>
     </string-array>
-    <!-- From: file:/C:/Users/John/Documents/GitHub/NoteNote/app/src/main/res/values/colors.xml -->
+    <!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/values/colors.xml -->
     <eat-comment/>
     <color name="black">#000000</color>
     <color name="gray">#808080</color>
-    <!-- From: file:/C:/Users/John/Documents/GitHub/NoteNote/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="color_view_height">80dp</dimen>
     <dimen name="line_imageview_height">50dp</dimen>
-    <!-- From: file:/C:/Users/John/Documents/GitHub/NoteNote/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="New_zSubject">"New Subject"</string>
     <string name="action_add">Add New Note</string>
@@ -54,7 +54,7 @@
     <string name="title">New Subject:</string>
     <string name="title_color_dialog">Choose Color</string>
     <string name="title_line_width_dialog">Choose Line Width</string>
-    <!-- From: file:/C:/Users/John/Documents/GitHub/NoteNote/app/src/main/res/values/style.xml -->
+    <!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/values/style.xml -->
     <eat-comment/>
     <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!-- API 14 theme customizations can go here. -->

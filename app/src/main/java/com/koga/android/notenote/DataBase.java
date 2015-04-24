@@ -87,16 +87,24 @@ public class DataBase extends SQLiteOpenHelper {
 
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
-        this.dvdr = null;
-        this.sbjct = null;
-        this.noot = null;
+        //this.dvdr = null;
+        //this.sbjct = null;
+        //this.noot = null;
 
     }
 
-    public void updateReff(String newSbjct, String newDvder, String newNoot){
+    public void setSbj(String newSbjct){
 
         this.sbjct = newSbjct;
+
+    }
+    public void setDiv(String newDvder){
+
         this.dvdr = newDvder;
+
+    }
+    public void setNote(String newNoot){
+
         this.noot = newNoot;
 
     }
@@ -205,17 +213,31 @@ public class DataBase extends SQLiteOpenHelper {
 
     public Bitmap getBitmaps() { //gets the bitmap for note
         Bitmap image = null;
-
+        this.sbjct = MainActivity.sbj;
+        this.dvdr = MainActivity.div;
+        this.noot = MainActivity.note.trim();
         SQLiteDatabase db = this.getWritableDatabase();
+        //Cursor cursor = db.rawQuery("SELECT * FROM ")
+        //this.dvdr =
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES + " WHERE " + DIV_FOREIGN_KEY + "='" + this.dvdr + "' AND " + SBJ_FOREIGN_KEY + "='" + this.sbjct + "' AND " + NOTE_PRIMARY_KEY + "='" + this.noot + "';", null);
 
         if(cursor.moveToFirst()) {
             do {
-                image = (DbBitmapUtility.getImage(cursor.getBlob(3)));
+
+                if(cursor.getBlob(3)!=null) {
+                    Toast.makeText(context, "Entry does have a bitmap!", Toast.LENGTH_SHORT).show();
+                    image = (DbBitmapUtility.getImage(cursor.getBlob(3)));
+                }
             } while(cursor.moveToNext());
         }
         cursor.close();
         db.close();
+        if(image == null) {
+            DisplayMetrics display = context.getResources().getDisplayMetrics();
+            int w = display.widthPixels;
+            int h = display.heightPixels;
+            image = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        }
         return image;
     }
 
@@ -253,7 +275,8 @@ public class DataBase extends SQLiteOpenHelper {
         values.put(DIV_FOREIGN_KEY, divider);
         values.put(SBJ_FOREIGN_KEY, subject);
         values.put(NOTE_PRIMARY_KEY, note);
-        values.put(BITMAP_KEY, DbBitmapUtility.getBytes(image));
+        if(image!=null)
+            values.put(BITMAP_KEY, DbBitmapUtility.getBytes(image));
         //Toast.makeText(context,values.toString(), Toast.LENGTH_LONG).show();
         db.insert(TABLE_NOTES, null, values);
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES, null);
@@ -265,13 +288,19 @@ public class DataBase extends SQLiteOpenHelper {
     public void addBitmap(Bitmap image) { //adds note to divider in subject
 
         SQLiteDatabase db = this.getWritableDatabase();
+        /*
+        String strSQL = "UPDATE nts SET bitmap = " + DbBitmapUtility.getBytes(image) + " WHERE subject = '" + sbjct + "' AND divider = '" + dvdr
+                + "' AND note = '" + noot + "';";
+        db.execSQL(strSQL);
+        */
 
         ContentValues values = new ContentValues();
-        values.put(BITMAP_KEY, DbBitmapUtility.getBytes(image));
-        String where = "" + NOTE_PRIMARY_KEY + "='" + this.noot + "' AND " + SBJ_FOREIGN_KEY + "='" + this.sbjct +"' AND " + DIV_FOREIGN_KEY + "='" + this.dvdr + "'";
+        byte[] byteArray = DbBitmapUtility.getBytes(image);
+        values.put(BITMAP_KEY, byteArray);
+        String where = "" + NOTE_PRIMARY_KEY + " = '"+ this.noot + "' AND " + SBJ_FOREIGN_KEY + " = '" + this.sbjct +"' AND "
+                + DIV_FOREIGN_KEY + " = '" + this.dvdr + "'";
         //Toast.makeText(context,where, Toast.LENGTH_LONG).show();
         db.update(TABLE_NOTES, values, where, null);
-        // Toast.makeText(context, "Subject: "+ cursor.getString(1)+ " Divider: "+ cursor.getString(0) + " Note: " + cursor.getString(2), Toast.LENGTH_LONG ).show();
         db.close();
 
     }
