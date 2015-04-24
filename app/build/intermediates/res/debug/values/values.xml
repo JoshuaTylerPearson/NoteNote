@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/John/Documents/GitHub/NoteNote/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string-array name="notes_array">
     </string-array>
@@ -8,11 +8,11 @@
         <item>New Note</item>
         <item>New Divider</item>
     </string-array>
-    <!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/values/colors.xml -->
+    <!-- From: file:/C:/Users/John/Documents/GitHub/NoteNote/app/src/main/res/values/colors.xml -->
     <eat-comment/>
     <color name="black">#000000</color>
     <color name="gray">#808080</color>
-    <!-- From: file:/C:/Users/KogAtlas/Documents/GitHub/NoteNote/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/John/Documents/GitHub/NoteNote/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="New_zSubject">"New Subject"</string>
     <string name="action_add">Add New Note</string>
