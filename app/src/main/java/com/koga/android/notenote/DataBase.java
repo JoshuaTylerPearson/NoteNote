@@ -3,17 +3,28 @@ package com.koga.android.notenote;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -45,6 +56,7 @@ public class DataBase extends SQLiteOpenHelper {
     private String noot;
     private String dvdr;
 
+    private String encodedImage;
 
 
 
@@ -203,6 +215,8 @@ public class DataBase extends SQLiteOpenHelper {
         dvdr = MainActivity.div;
         noot = MainActivity.note.trim();
         SQLiteDatabase db = this.getWritableDatabase();
+        String newEncodedImage = null;
+
         //Cursor cursor = db.rawQuery("SELECT * FROM ")
         //this.dvdr =
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES + " WHERE " + DIV_FOREIGN_KEY + "='" + dvdr + "' AND " + SBJ_FOREIGN_KEY + "='" + sbjct + "' AND " + NOTE_PRIMARY_KEY + "='" + noot + "';", null);
@@ -210,20 +224,27 @@ public class DataBase extends SQLiteOpenHelper {
         if(cursor.moveToFirst()) {
             do {
 
-                if(cursor.getBlob(3)!=null) {
-                    Toast.makeText(context, "Entry does have a bitmap!", Toast.LENGTH_SHORT).show();
-                    image = (DbBitmapUtility.getImage(cursor.getBlob(3)));
+                if(cursor.getString(3)!=null) {
+                    //Toast.makeText(context, cursor.getString(3), Toast.LENGTH_SHORT).show();
+                    newEncodedImage = cursor.getString(3);
                 }
             } while(cursor.moveToNext());
         }
         cursor.close();
         db.close();
+////////////////////////////////////////////////////////////////////////////////////////////////////
+        if(newEncodedImage != null) {
+            byte[] decodedString = Base64.decode(newEncodedImage, Base64.DEFAULT);
+            image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        }
+////////////////////////////////////////////////////////////////////////////////////////////////////
         if(image == null) {
             DisplayMetrics display = context.getResources().getDisplayMetrics();
             int w = display.widthPixels;
             int h = display.heightPixels;
             image = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         }
+
         return image;
     }
 
@@ -271,24 +292,26 @@ public class DataBase extends SQLiteOpenHelper {
 
     }
 
-    public void addBitmap(Bitmap image) { //adds note to divider in subject
+    public void addBitmap(Bitmap image){ //adds note to divider in subject
 
         sbjct = MainActivity.sbj;
         dvdr = MainActivity.div;
         noot = MainActivity.note.trim();
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+        byte[] b = baos.toByteArray();
+
+        encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+////////////////////////////////////////////////////////////////////////////////////////////////////
         SQLiteDatabase db = this.getWritableDatabase();
-        /*
-        String strSQL = "UPDATE nts SET bitmap = " + DbBitmapUtility.getBytes(image) + " WHERE subject = '" + sbjct + "' AND divider = '" + dvdr
-                + "' AND note = '" + noot + "';";
-        db.execSQL(strSQL);
-        */
 
         ContentValues values = new ContentValues();
-        values.put(BITMAP_KEY, DbBitmapUtility.getString(image));
+        values.put(BITMAP_KEY, encodedImage);
         String where = "" + NOTE_PRIMARY_KEY + " = '"+ noot + "' AND " + SBJ_FOREIGN_KEY + " = '" + sbjct +"' AND "
                 + DIV_FOREIGN_KEY + " = '" + dvdr + "'";
-        //Toast.makeText(context,where, Toast.LENGTH_LONG).show();
+        //Toast.makeText(context,where + " " + encodedImage, Toast.LENGTH_LONG).show();
         db.update(TABLE_NOTES, values, where, null);
         db.close();
 
@@ -312,10 +335,11 @@ public class DataBase extends SQLiteOpenHelper {
     }
 
     public void deleteNote(String note) { //del note
-        Toast.makeText(context, note.trim(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, note.trim(), Toast.LENGTH_SHORT).show();
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NOTES, (NOTE_PRIMARY_KEY + " = '" +  note.trim() + "'"), null);
 
         db.close();
     }
+
 }

@@ -1,6 +1,8 @@
 
 package com.koga.android.notenote;
 
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +16,7 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -79,56 +82,38 @@ public class DoodleView extends View
 
       db = new DataBase(getRootView().getContext());
 
-       //bitmap = db.getBitmaps();
 
-       Bitmap workingBitmap = db.getBitmaps();
-       bitmap = workingBitmap.copy(workingBitmap.getConfig(), true);
+
+       Bitmap immutable = db.getBitmaps();
+       bitmap = immutable.copy(immutable.getConfig(), true);
+
        bitmapCanvas = new Canvas(bitmap);
        bitmapCanvas.drawBitmap(bitmap, 0, 0, paintScreen);
-       invalidate();
+
+
    }
 
    // Method onSizeChanged creates Bitmap and Canvas after app displays
    @Override 
    public void onSizeChanged(int w, int h, int oldW, int oldH)
    {
-       //try {
-          // bitmap = Bitmap.createBitmap(db.getBitmaps());
-       Bitmap workingBitmap = db.getBitmaps();
-       bitmap = workingBitmap.copy(workingBitmap.getConfig(), true);
-           //Toast.makeText(context, "derp", Toast.LENGTH_LONG).show();
+       if(bitmap == null) {
+           Bitmap immutable = db.getBitmaps();
+           bitmap = immutable.copy(immutable.getConfig(), true);
            bitmapCanvas = new Canvas(bitmap);
+           Rect rect = new Rect(0, 0, w, h);
+           bitmapCanvas.drawBitmap(bitmap, null, rect, null );
            bitmap.eraseColor(Color.TRANSPARENT);
-       //}catch (Exception ignored){
-
-       //}
-       /*
-	   if(bitmap == null)
-	   {
-		   //bitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
-		   bitmapCanvas = new Canvas(bitmap);
-		   bitmap.eraseColor(Color.TRANSPARENT);
-	   }
-       */
-       invalidate();
+       }
+       //invalidate();
        // erase the Bitmap with white
    } 
    
    public void setBackground(int color)
-   { 
-	   /*
-	   for(int x = 0; x < bitmap.getWidth(); x++)
-	   {
-		   for(int y = 0; y < bitmap.getHeight(); y++)
-		   {
-			   if(bitmap.getPixel(x, y) == backgroundColor)
-				   bitmap.setPixel(x, y, color);
-		   }
-	   }*/
+   {
 	   this.setBackgroundColor(color);
 	   backgroundColor = color;	    
 	   invalidate();
-	 
    }
    // clear the painting
    public void clear()
@@ -356,37 +341,11 @@ public class DoodleView extends View
       path.reset(); // reset the Path
    } 
 
-   // save the current image to the Gallery
+   // save the current image to db
    public void saveImage()
    {
        db.addBitmap(bitmap);
-      /*
-      String name = "DroidNoteDraw" + System.currentTimeMillis() + ".jpg";
-      
-      // insert the image in the device's gallery
-      String location = MediaStore.Images.Media.insertImage(
-         getContext().getContentResolver(), bitmap, name, 
-         "DroidNoteDraw Drawing");
 
-      if (location != null) // image was saved
-      {
-         // display a message indicating that the image was saved
-         Toast message = Toast.makeText(getContext(), 
-            R.string.message_saved, Toast.LENGTH_SHORT);
-         message.setGravity(Gravity.CENTER, message.getXOffset() / 2, 
-            message.getYOffset() / 2);
-         message.show();
-      }
-      else      
-      {
-         // display a message indicating that the image was saved
-         Toast message = Toast.makeText(getContext(), 
-            R.string.message_error_saving, Toast.LENGTH_SHORT);
-         message.setGravity(Gravity.CENTER, message.getXOffset() / 2, 
-            message.getYOffset() / 2);
-         message.show(); 
-      }
-      */
    } // end method saveImage
 
 } // end class DoodleView
